@@ -4,9 +4,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Loan {
-	private Book book;
-	private Borrower borrower;
-	private Branch branch;
+	private final Book book;
+	private final Borrower borrower;
+	private final Branch branch;
 	private LocalDateTime dateOut;
 	private LocalDate dueDate;
 
@@ -22,24 +22,12 @@ public class Loan {
 		return book;
 	}
 
-	public void setBook(Book book) {
-		this.book = book;
-	}
-
 	public Borrower getBorrower() {
 		return borrower;
 	}
 
-	public void setBorrower(Borrower borrower) {
-		this.borrower = borrower;
-	}
-
 	public Branch getBranch() {
 		return branch;
-	}
-
-	public void setBranch(Branch branch) {
-		this.branch = branch;
 	}
 
 	public LocalDateTime getDateOut() {
