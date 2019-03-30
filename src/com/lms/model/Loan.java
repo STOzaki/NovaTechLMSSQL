@@ -2,6 +2,7 @@ package com.lms.model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class Loan {
 	private final Book book;
@@ -48,14 +49,7 @@ public class Loan {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((book == null) ? 0 : book.hashCode());
-		result = prime * result + ((borrower == null) ? 0 : borrower.hashCode());
-		result = prime * result + ((branch == null) ? 0 : branch.hashCode());
-		result = prime * result + ((dateOut == null) ? 0 : dateOut.hashCode());
-		result = prime * result + ((dueDate == null) ? 0 : dueDate.hashCode());
-		return result;
+		return Objects.hash(book, borrower, branch);
 	}
 
 	@Override
