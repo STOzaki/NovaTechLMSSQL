@@ -1,5 +1,7 @@
 package com.lms.model;
 
+import java.util.Objects;
+
 public final class Author {
 	private final int id;
 	private String name;
@@ -27,21 +29,14 @@ public final class Author {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
+	public boolean equals(final Object obj) {
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		} else if (obj instanceof Author) {
+			return id == ((Author) obj).getId()
+					&& Objects.equals(name, ((Author) obj).getName());
+		} else {
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Author other = (Author) obj;
-		if (id != other.id)
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		return true;
+		}
 	}
 }

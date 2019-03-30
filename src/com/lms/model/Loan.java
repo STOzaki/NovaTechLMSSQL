@@ -53,39 +53,17 @@ public class Loan {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
+	public boolean equals(final Object obj) {
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		} else if (obj instanceof Loan) {
+			return Objects.equals(book, ((Loan) obj).getBook())
+					&& Objects.equals(borrower, ((Loan) obj).getBorrower())
+					&& Objects.equals(branch, ((Loan) obj).getBranch())
+					&& Objects.equals(dateOut, ((Loan) obj).getDateOut())
+					&& Objects.equals(dueDate, ((Loan) obj).getDueDate());
+		} else {
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Loan other = (Loan) obj;
-		if (book == null) {
-			if (other.book != null)
-				return false;
-		} else if (!book.equals(other.book))
-			return false;
-		if (borrower == null) {
-			if (other.borrower != null)
-				return false;
-		} else if (!borrower.equals(other.borrower))
-			return false;
-		if (branch == null) {
-			if (other.branch != null)
-				return false;
-		} else if (!branch.equals(other.branch))
-			return false;
-		if (dateOut == null) {
-			if (other.dateOut != null)
-				return false;
-		} else if (!dateOut.equals(other.dateOut))
-			return false;
-		if (dueDate == null) {
-			if (other.dueDate != null)
-				return false;
-		} else if (!dueDate.equals(other.dueDate))
-			return false;
-		return true;
+		}
 	}
 }

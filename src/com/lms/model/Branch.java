@@ -1,5 +1,7 @@
 package com.lms.model;
 
+import java.util.Objects;
+
 public class Branch {
 	private final int id;
 	private String name;
@@ -37,26 +39,15 @@ public class Branch {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
+	public boolean equals(final Object obj) {
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		} else if (obj instanceof Branch) {
+			return id == ((Branch) obj).getId()
+					&& Objects.equals(name, ((Branch) obj).getName())
+					&& Objects.equals(address, ((Branch) obj).getAddress());
+		} else {
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Branch other = (Branch) obj;
-		if (address == null) {
-			if (other.address != null)
-				return false;
-		} else if (!address.equals(other.address))
-			return false;
-		if (id != other.id)
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		return true;
+		}
 	}
 }
