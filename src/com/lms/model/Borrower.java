@@ -1,5 +1,7 @@
 package com.lms.model;
 
+import java.util.Objects;
+
 public class Borrower {
 	private final int cardNo;
 	private String name;
@@ -47,31 +49,16 @@ public class Borrower {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
+	public boolean equals(final Object obj) {
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		} else if (obj instanceof Borrower) {
+			return cardNo == ((Borrower) obj).getCardNo()
+					&& Objects.equals(name, ((Borrower) obj).getName())
+					&& Objects.equals(address, ((Borrower) obj).getAddress())
+					&& Objects.equals(phone, ((Borrower) obj).getPhone());
+		} else {
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Borrower other = (Borrower) obj;
-		if (address == null) {
-			if (other.address != null)
-				return false;
-		} else if (!address.equals(other.address))
-			return false;
-		if (cardNo != other.cardNo)
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		if (phone == null) {
-			if (other.phone != null)
-				return false;
-		} else if (!phone.equals(other.phone))
-			return false;
-		return true;
+		}
 	}
 }
