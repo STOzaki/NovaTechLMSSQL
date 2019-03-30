@@ -11,5 +11,4 @@ import com.lms.model.Loan;
 
 public interface BookLoans extends Dao<Loan> {
 	public abstract void create(Book book, Borrower borrower, Branch branch, LocalDateTime dateOut, LocalDate dueDate);
-	public abstract List<Loan> getAllLoans();
 }
