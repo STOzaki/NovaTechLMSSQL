@@ -43,13 +43,7 @@ public class Book {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((author == null) ? 0 : author.hashCode());
-		result = prime * result + id;
-		result = prime * result + ((publisher == null) ? 0 : publisher.hashCode());
-		result = prime * result + ((title == null) ? 0 : title.hashCode());
-		return result;
+		return id;
 	}
 
 	@Override
