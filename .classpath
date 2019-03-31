@@ -5,7 +5,7 @@
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
-	<classpathentry kind="lib" path="C:/Users/salem/eclipse-workspace/NovaTechLMSSQL/lib/mysql-connector-java-5.1.47.jar"/>
+	<classpathentry kind="lib" path="lib/mysql-connector-java-5.1.47.jar"/>
 	<classpathentry kind="lib" path="lib/logback-classic-1.2.3.jar"/>
 	<classpathentry kind="lib" path="lib/logback-core-1.2.3.jar"/>
 	<classpathentry kind="lib" path="lib/slf4j-api-1.7.26.jar"/>
