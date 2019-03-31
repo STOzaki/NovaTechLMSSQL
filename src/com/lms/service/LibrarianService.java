@@ -6,7 +6,7 @@ import java.util.Map;
 import com.lms.model.Book;
 import com.lms.model.Branch;
 
-public interface LibrarianService {
+public interface LibrarianService extends Service {
 	public abstract void updateBranch(Branch branch);
 	public abstract void setBranchCopies(Branch branch, Book book, int noOfCopies);
 	public abstract List<Book> getAllBooks();

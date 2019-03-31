@@ -9,7 +9,7 @@ import com.lms.model.Borrower;
 import com.lms.model.Branch;
 import com.lms.model.Publisher;
 
-public interface AdministratorService {
+public interface AdministratorService extends Service {
 	// for Book
 	public abstract Book createBook(String title, Author author, Publisher publisher);
 //	public abstract Book createBook(String, String author, String publisher); // not sure if this is necessary
