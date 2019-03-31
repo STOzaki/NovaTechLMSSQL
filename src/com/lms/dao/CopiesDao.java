@@ -34,7 +34,7 @@ public interface CopiesDao {
 	 *                   negative.
 	 * @throws SQLException on unexpected error in dealing with the database.
 	 */
-	public abstract void setCopies(Branch branch , Book book, int noOfCopies) throws SQLException;
+	public abstract void setCopies(Branch branch, Book book, int noOfCopies) throws SQLException;
 
 	/**
 	 * Retrieve all copies held by the given branch, as a mapping from books to the

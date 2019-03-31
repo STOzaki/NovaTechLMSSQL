@@ -126,7 +126,7 @@ public interface AdministratorService extends Service {
 	 * @param address the address of the branch
 	 * @return the newly created branch object
 	 */
-	public abstract Branch createBranch(String name , String address);
+	public abstract Branch createBranch(String name, String address);
 	/**
 	 * Remove the given branch from the database.
 	 * @param branch the branch to remove

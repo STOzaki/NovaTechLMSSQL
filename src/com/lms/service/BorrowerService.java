@@ -29,7 +29,7 @@ public interface BorrowerService extends Service {
 	 * @param dueDate the date the book is due
 	 * @return the object representing the loan
 	 */
-	public abstract Loan borrowBook(Borrower borrower, Book book , Branch branch, LocalDateTime dateOut, LocalDate dueDate);
+	public abstract Loan borrowBook(Borrower borrower, Book book, Branch branch, LocalDateTime dateOut, LocalDate dueDate);
 
 	/**
 	 * Get all book-copy counts for the given branch.
@@ -53,7 +53,7 @@ public interface BorrowerService extends Service {
 	 * @param dueDate TODO: document this once author clarifies its purpose
 	 * @return true on success, false if the book was overdue
 	 */
-	public abstract boolean returnBook(Borrower borrower, Book book , Branch branch, LocalDate dueDate);
+	public abstract boolean returnBook(Borrower borrower, Book book, Branch branch, LocalDate dueDate);
 	/**
 	 * Get all branches from which the borrower has an outstanding loan.
 	 * @return all branches the borrower owes a book return to.
