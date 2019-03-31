@@ -10,5 +10,5 @@ import com.lms.model.Branch;
 import com.lms.model.Loan;
 
 public interface BookLoans extends Dao<Loan> {
-	public abstract void create(Book book, Borrower borrower, Branch branch, LocalDateTime dateOut, LocalDate dueDate) throws SQLException;
+	public abstract Loan create(Book book, Borrower borrower, Branch branch, LocalDateTime dateOut, LocalDate dueDate) throws SQLException;
 }
