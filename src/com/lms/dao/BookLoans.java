@@ -12,8 +12,8 @@ import com.lms.model.Loan;
 
 public interface BookLoans {
 	public abstract Loan create(Book book, Borrower borrower, Branch branch, LocalDateTime dateOut, LocalDate dueDate) throws SQLException;
-	public abstract void update(Book t) throws SQLException;
-	public abstract void delete(Book t) throws SQLException;
+	public abstract void update(Book book) throws SQLException;
+	public abstract void delete(Book book) throws SQLException;
 	public abstract Book get(Book book, Borrower borrower, Branch branch) throws SQLException;
 	public abstract List<Book> getAll() throws SQLException;
 }
