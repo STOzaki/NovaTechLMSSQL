@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @param <T> the type of model object this DAO deals primarily with
  */
-public interface Dao <T> {
+public interface Dao<T> {
 	/**
 	 * Update the database representation of the given object to match its
 	 * properties.
