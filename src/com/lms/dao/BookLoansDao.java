@@ -10,7 +10,7 @@ import com.lms.model.Borrower;
 import com.lms.model.Branch;
 import com.lms.model.Loan;
 
-public interface BookLoans {
+public interface BookLoansDao {
 	public abstract Loan create(Book book, Borrower borrower, Branch branch, LocalDateTime dateOut, LocalDate dueDate) throws SQLException;
 	public abstract void update(Book book) throws SQLException;
 	public abstract void delete(Book book) throws SQLException;
