@@ -19,5 +19,5 @@ public interface LibraryBranchDao extends Dao<Branch> {
 	 * @return the newly created branch object
 	 * @throws SQLException on unexpected error in dealing with the database
 	 */
-	public abstract Branch create(String branchName, String branchAddress) throws SQLException;
+	Branch create(String branchName, String branchAddress) throws SQLException;
 }

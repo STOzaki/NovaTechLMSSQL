@@ -29,19 +29,19 @@ public interface BookLoansDao {
 	 * @return the created loan object
 	 * @throws SQLException on unexpected error dealing with the database
 	 */
-	public abstract Loan create(Book book, Borrower borrower, Branch branch, LocalDateTime dateOut, LocalDate dueDate) throws SQLException;
+	Loan create(Book book, Borrower borrower, Branch branch, LocalDateTime dateOut, LocalDate dueDate) throws SQLException;
 	/**
 	 * Update the dates associated with the given loan.
 	 * @param loan The loan in question
 	 * @throws SQLException on unexpected error dealing with the database
 	 */
-	public abstract void update(Loan loan) throws SQLException;
+	void update(Loan loan) throws SQLException;
 	/**
 	 * Delete a loan from the database.
 	 * @param loan The loan to delete
 	 * @throws SQLException on unexpected error dealing with the database
 	 */
-	public abstract void delete(Loan loan) throws SQLException;
+	void delete(Loan loan) throws SQLException;
 
 	/**
 	 * Get the loan in which the given borrower checked out the given book from the
@@ -53,7 +53,7 @@ public interface BookLoansDao {
 	 * @return the Loan object giving the dates associated with this loan
 	 * @throws SQLException on unexpected error dealing with the database
 	 */
-	public abstract Loan get(Book book, Borrower borrower, Branch branch) throws SQLException;
+	Loan get(Book book, Borrower borrower, Branch branch) throws SQLException;
 
 	/**
 	 * Get all outstanding loans from the database. Callers should not rely on the
@@ -62,5 +62,5 @@ public interface BookLoansDao {
 	 * @return the list of all outstanding loans
 	 * @throws SQLException on unexpected error dealing with the database
 	 */
-	public abstract List<Loan> getAll() throws SQLException;
+	List<Loan> getAll() throws SQLException;
 }

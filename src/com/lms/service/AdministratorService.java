@@ -25,7 +25,7 @@ public interface AdministratorService extends Service {
 	 * @param publisher the publisher of the book
 	 * @return the newly-created book
 	 */
-	public abstract Book createBook(String title, Author author, Publisher publisher);
+	Book createBook(String title, Author author, Publisher publisher);
 //	/**
 //	 * Create a book with the given title, author, and publisher and store it in the
 //	 * database.
@@ -35,31 +35,31 @@ public interface AdministratorService extends Service {
 //	 * @param publisher the publisher of the book
 //	 * @return the newly-created book
 //	 */
-//	public abstract Book createBook(String, String author, String publisher); // not sure if this is necessary
+//	Book createBook(String, String author, String publisher); // not sure if this is necessary
 	/**
 	 * Update the database row representing the given book to match its current
 	 * state.
 	 *
 	 * @param book the book to update in the database.
 	 */
-	public abstract void updateBook(Book book);
+	void updateBook(Book book);
 	/**
 	 * Remove the given book from the database.
 	 * @param book the book to remove
 	 */
-	public abstract void deleteBook(Book book);
+	void deleteBook(Book book);
 	/**
 	 * Get a list (order should not be relied on) of all the books in the database.
 	 * @return all the books in the database.
 	 */
-	public abstract List<Book> getAllBooks();
+	List<Book> getAllBooks();
 
 	/**
 	 * Create an author object and add the author to the database.
 	 * @param name the name of the author
 	 * @return the newly created Author object
 	 */
-	public abstract Author createAuthor(String name);
+	Author createAuthor(String name);
 
 	/**
 	 * Update the database record for the given author object to match its current
@@ -67,17 +67,17 @@ public interface AdministratorService extends Service {
 	 *
 	 * @param author the author to update in the database.
 	 */
-	public abstract void updateAuthor(Author author);
+	void updateAuthor(Author author);
 	/**
 	 * Remove the given author from the database.
 	 * @param author the author to remove
 	 */
-	public abstract void deleteAuthor(Author author);
+	void deleteAuthor(Author author);
 	/**
 	 * Get a list (order should not be relied on) of all the authors in the database.
 	 * @return all the authors in the database.
 	 */
-	public abstract List<Author> getAllAuthors();
+	List<Author> getAllAuthors();
 
 	/**
 	 * Create a publisher object, with no address or phone number, and add the
@@ -86,7 +86,7 @@ public interface AdministratorService extends Service {
 	 * @param name the publisher's name
 	 * @return the newly created publisher
 	 */
-	public abstract Publisher createPublisher(String name);
+	Publisher createPublisher(String name);
 
 	/**
 	 * Create a publisher object with full state and add the publisher to the
@@ -97,7 +97,7 @@ public interface AdministratorService extends Service {
 	 * @param phone   the publisher's phone number
 	 * @return the newly created publisher
 	 */
-	public abstract Publisher createPublisher(String name, String address, String phone);
+	Publisher createPublisher(String name, String address, String phone);
 
 	/**
 	 * Update the database record representing the given publisher to match its
@@ -105,12 +105,12 @@ public interface AdministratorService extends Service {
 	 *
 	 * @param publisher the publisher to update in the database
 	 */
-	public abstract void updatePublisher(Publisher publisher);
+	void updatePublisher(Publisher publisher);
 	/**
 	 * Remove the given publisher from the database.
 	 * @param publisher the publisher to remove.
 	 */
-	public abstract void deletePublisher(Publisher publisher);
+	void deletePublisher(Publisher publisher);
 
 	/**
 	 * Get a list (order should not be relied on) of all the publishers in the
@@ -118,7 +118,7 @@ public interface AdministratorService extends Service {
 	 *
 	 * @return all the publishers in the database.
 	 */
-	public abstract List<Publisher> getAllPublishers();
+	List<Publisher> getAllPublishers();
 
 	/**
 	 * Create a library branch object and add it to the database.
@@ -126,17 +126,17 @@ public interface AdministratorService extends Service {
 	 * @param address the address of the branch
 	 * @return the newly created branch object
 	 */
-	public abstract Branch createBranch(String name, String address);
+	Branch createBranch(String name, String address);
 	/**
 	 * Remove the given branch from the database.
 	 * @param branch the branch to remove
 	 */
-	public abstract void deleteBranch(Branch branch);
+	void deleteBranch(Branch branch);
 	/**
 	 * Update the database row representing the given branch with its state.
 	 * @param branch the branch to update in the database
 	 */
-	public abstract void updateBranch(Branch branch);
+	void updateBranch(Branch branch);
 	// getAllBranches() is specified in the Service interface
 
 	/**
@@ -148,7 +148,7 @@ public interface AdministratorService extends Service {
 	 * @param phone   the borrower's phone number
 	 * @return the newly created borrower object
 	 */
-	public abstract Borrower createBorrower(String name, String address, String phone);
+	Borrower createBorrower(String name, String address, String phone);
 
 	/**
 	 * Update the database row representing the given borrower with the object's
@@ -156,12 +156,12 @@ public interface AdministratorService extends Service {
 	 *
 	 * @param borrower the borrower to update in the database
 	 */
-	public abstract void updateBorrower(Borrower borrower);
+	void updateBorrower(Borrower borrower);
 	/**
 	 * Remove the given borrower from the database.
 	 * @param borrower the borrower to remove
 	 */
-	public abstract void deleteBorrower(Borrower borrower);
+	void deleteBorrower(Borrower borrower);
 
 	/**
 	 * Get a list (order should not be relied on) of all the borrowers in the
@@ -169,7 +169,7 @@ public interface AdministratorService extends Service {
 	 *
 	 * @return all the borrowers in the database.
 	 */
-	public abstract List<Borrower> getAllBorrowers();
+	List<Borrower> getAllBorrowers();
 
 	/**
 	 * Override the due date for the given borrower's loan of the given book from
@@ -182,5 +182,5 @@ public interface AdministratorService extends Service {
 	 * @param dueDate the new due date for the loan
 	 * @return true on success, false if no such loan currently exists
 	 */
-	public abstract boolean overrideDueDateForLoan(Book book, Borrower borrower, Branch branch, LocalDate dueDate);
+	boolean overrideDueDateForLoan(Book book, Borrower borrower, Branch branch, LocalDate dueDate);
 }

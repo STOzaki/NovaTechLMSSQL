@@ -29,7 +29,7 @@ public interface BorrowerService extends Service {
 	 * @param dueDate the date the book is due
 	 * @return the object representing the loan
 	 */
-	public abstract Loan borrowBook(Borrower borrower, Book book, Branch branch, LocalDateTime dateOut, LocalDate dueDate);
+	Loan borrowBook(Borrower borrower, Book book, Branch branch, LocalDateTime dateOut, LocalDate dueDate);
 
 	/**
 	 * Get all book-copy counts for the given branch.
@@ -38,7 +38,7 @@ public interface BorrowerService extends Service {
 	 * @return a mapping from books in that library to the number of copies of each
 	 *         that it has.
 	 */
-	public abstract Map<Book, Integer> getAllBranchCopies(Branch branch);
+	Map<Book, Integer> getAllBranchCopies(Branch branch);
 
 	/**
 	 * Handle a returned book: if there is an outstanding loan of the given book to
@@ -53,16 +53,16 @@ public interface BorrowerService extends Service {
 	 * @param dueDate TODO: document this once author clarifies its purpose
 	 * @return true on success, false if the book was overdue
 	 */
-	public abstract boolean returnBook(Borrower borrower, Book book, Branch branch, LocalDate dueDate);
+	boolean returnBook(Borrower borrower, Book book, Branch branch, LocalDate dueDate);
 	/**
 	 * Get all branches from which the borrower has an outstanding loan.
 	 * @return all branches the borrower owes a book return to.
 	 */
-	public abstract List<Branch> getAllBranchesWithLoan(Borrower borrower);
+	List<Branch> getAllBranchesWithLoan(Borrower borrower);
 	/**
 	 * Get all books the borrower has borrowed from any library branch.
 	 * @return the list of books the borrower has out from any library.
 	 */
-	public abstract List<Book> getAllBorrowedBooks(Borrower borrower);
+	List<Book> getAllBorrowedBooks(Borrower borrower);
 
 }

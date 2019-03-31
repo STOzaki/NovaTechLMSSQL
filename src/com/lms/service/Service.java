@@ -17,5 +17,5 @@ public interface Service {
 	 *
 	 * @return all the borrowers in the database.
 	 */
-	public abstract List<Branch> getAllBranches();
+	List<Branch> getAllBranches();
 }

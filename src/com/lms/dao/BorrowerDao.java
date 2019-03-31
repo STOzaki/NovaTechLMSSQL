@@ -20,5 +20,5 @@ public interface BorrowerDao extends Dao<Borrower> {
 	 * @return the newly created borrower object
 	 * @throws SQLException on unexpected error in dealing with the database
 	 */
-	public abstract Borrower create(String borrowerName, String borrowerAddress, String borrowerPhone) throws SQLException;
+	Borrower create(String borrowerName, String borrowerAddress, String borrowerPhone) throws SQLException;
 }

@@ -22,7 +22,7 @@ public interface CopiesDao {
 	 * @return the number of copies held by that branch; if none, 0.
 	 * @throws SQLException on unexpected error in dealing with the database.
 	 */
-	public abstract int getCopies(Branch branch, Book book) throws SQLException;
+	int getCopies(Branch branch, Book book) throws SQLException;
 
 	/**
 	 * Set the number of copies of a book held by a particular branch. If the number
@@ -34,7 +34,7 @@ public interface CopiesDao {
 	 *                   negative.
 	 * @throws SQLException on unexpected error in dealing with the database.
 	 */
-	public abstract void setCopies(Branch branch, Book book, int noOfCopies) throws SQLException;
+	void setCopies(Branch branch, Book book, int noOfCopies) throws SQLException;
 
 	/**
 	 * Retrieve all copies held by the given branch, as a mapping from books to the

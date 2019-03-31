@@ -21,5 +21,5 @@ public interface BookDao extends Dao<Book> {
 	 * @return the created book
 	 * @throws SQLException on unexpected error dealing with the database
 	 */
-	public abstract Book create(String title, Author author, Publisher publisher) throws SQLException;
+	Book create(String title, Author author, Publisher publisher) throws SQLException;
 }

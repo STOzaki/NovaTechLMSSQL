@@ -19,5 +19,5 @@ public interface PublisherDao extends Dao<Publisher> {
 	 * @return the newly created publisher object
 	 * @throws SQLException on unexpected error in dealing with the database
 	 */
-	public abstract Publisher create(String publisherName, String publisherAddress, String publisherPhone) throws SQLException;
+	Publisher create(String publisherName, String publisherAddress, String publisherPhone) throws SQLException;
 }

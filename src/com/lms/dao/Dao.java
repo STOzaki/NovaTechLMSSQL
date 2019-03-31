@@ -19,20 +19,20 @@ public interface Dao<T> {
 	 * @param t the object to update the database to match
 	 * @throws SQLException on unexpected error dealing with the database
 	 */
-	public abstract void update(T t) throws SQLException;
+	void update(T t) throws SQLException;
 	/**
 	 * Remove the representation of the given object from the database.
 	 * @param t the object to remove from the database.
 	 * @throws SQLException on unexpected error dealing with the database
 	 */
-	public abstract void delete(T t) throws SQLException;
+	void delete(T t) throws SQLException;
 	/**
 	 * Retrieve an object from the database table by its ID.
 	 * @param id the ID number of the object to retrieve.
 	 * @return the object represented by that ID number
 	 * @throws SQLException on unexpected error dealing with the database
 	 */
-	public abstract T get(int id) throws SQLException;
+	T get(int id) throws SQLException;
 
 	/**
 	 * Get the list of all entries in this table. (The order in the list should not
@@ -41,5 +41,5 @@ public interface Dao<T> {
 	 * @return the collection of all entries in this table
 	 * @throws SQLException on unexpected error dealing with the database
 	 */
-	public abstract List<T> getAll() throws SQLException;
+	List<T> getAll() throws SQLException;
 }

@@ -18,5 +18,5 @@ public interface AuthorDao extends Dao<Author> {
 	 * @return the created author
 	 * @throws SQLException on unexpected error dealing with the database
 	 */
-	public abstract Author create(String authorName) throws SQLException;
+	Author create(String authorName) throws SQLException;
 }
