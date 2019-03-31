@@ -24,7 +24,7 @@ public final class Author {
 	 * @param id   the ID used to reference the author in the database.
 	 * @param name the author's name
 	 */
-	public Author(int id, String name) {
+	public Author(final int id, final String name) {
 		this.id = id;
 		this.name = name;
 	}
@@ -42,7 +42,7 @@ public final class Author {
 	 *
 	 * @param name the author's new name.
 	 */
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.name = name;
 	}
 

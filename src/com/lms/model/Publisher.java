@@ -33,7 +33,7 @@ public final class Publisher {
 	 * @param id   the ID number identifying this publisher in the database
 	 * @param name the publisher's name
 	 */
-	public Publisher(int id, String name) {
+	public Publisher(final int id, final String name) {
 		this.id = id;
 		this.name = name;
 	}
@@ -47,7 +47,8 @@ public final class Publisher {
 	 * @param address the publisher's address
 	 * @param phone   the publisher's phone number
 	 */
-	public Publisher(int id, String name, String address, String phone) {
+	public Publisher(final int id, final String name, final String address,
+			final String phone) {
 		this.id = id;
 		this.name = name;
 		this.address = address;
@@ -66,7 +67,7 @@ public final class Publisher {
 	 * Change the publisher's name.
 	 * @param name the publisher's new name, which must not be null.
 	 */
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.name = name;
 	}
 
@@ -82,7 +83,7 @@ public final class Publisher {
 	 * Change the publisher's address.
 	 * @param address the publisher's new address, which must not be null.
 	 */
-	public void setAddress(String address) {
+	public void setAddress(final String address) {
 		this.address = address;
 	}
 
@@ -98,7 +99,7 @@ public final class Publisher {
 	 * Change the publisher's phone number.
 	 * @param phone the publisher's new phone number, which must not be null.
 	 */
-	public void setPhone(String phone) {
+	public void setPhone(final String phone) {
 		this.phone = phone;
 	}
 

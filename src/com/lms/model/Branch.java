@@ -30,7 +30,7 @@ public class Branch {
 	 * @param name    The name of the branch
 	 * @param address The address of the branch
 	 */
-	public Branch(int id, String name, String address) {
+	public Branch(final int id, final String name, final String address) {
 		this.id = id;
 		this.name = name;
 		this.address = address;
@@ -48,7 +48,7 @@ public class Branch {
 	 * Change the name of the branch.
 	 * @param name The new name of the branch, which must not be null.
 	 */
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.name = name;
 	}
 
@@ -64,7 +64,7 @@ public class Branch {
 	 * Change the address of the branch.
 	 * @param address the branch's new address, which must not be null.
 	 */
-	public void setAddress(String address) {
+	public void setAddress(final String address) {
 		this.address = address;
 	}
 

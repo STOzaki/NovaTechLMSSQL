@@ -36,7 +36,8 @@ public class Borrower {
 	 * @param phone   the borrower's phone number, as a string, which should not be
 	 *                null.
 	 */
-	public Borrower(int cardNo, String name, String address, String phone) {
+	public Borrower(final int cardNo, final String name, final String address,
+			final String phone) {
 		this.cardNo = cardNo;
 		this.name = name;
 		this.address = address;
@@ -57,7 +58,7 @@ public class Borrower {
 	 *
 	 * @param name the borrower's new name, which should not be null.
 	 */
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.name = name;
 	}
 
@@ -75,7 +76,7 @@ public class Borrower {
 	 *
 	 * @param address the borrower's new address, which should not be null.
 	 */
-	public void setAddress(String address) {
+	public void setAddress(final String address) {
 		this.address = address;
 	}
 
@@ -93,7 +94,7 @@ public class Borrower {
 	 *
 	 * @param phone the borrower's new phone number, which should not be null.
 	 */
-	public void setPhone(String phone) {
+	public void setPhone(final String phone) {
 		this.phone = phone;
 	}
 

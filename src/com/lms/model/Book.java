@@ -54,7 +54,7 @@ public class Book {
 	 * Set the title of the book, which must not be null.
 	 * @param title the new title of the book.
 	 */
-	public void setTitle(String title) {
+	public void setTitle(final String title) {
 		this.title = title;
 	}
 
@@ -70,7 +70,7 @@ public class Book {
 	 * Set the author of the book.
 	 * @param author the new author of the book, or null if no author
 	 */
-	public void setAuthor(Author author) {
+	public void setAuthor(final Author author) {
 		this.author = author;
 	}
 
@@ -86,7 +86,7 @@ public class Book {
 	 * Set the publisher of the book.
 	 * @param publisher the new publisher of the book, or null if no publisher.
 	 */
-	public void setPublisher(Publisher publisher) {
+	public void setPublisher(final Publisher publisher) {
 		this.publisher = publisher;
 	}
 

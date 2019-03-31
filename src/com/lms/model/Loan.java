@@ -45,7 +45,8 @@ public class Loan {
 	 * @param dateOut  when it was checked out
 	 * @param dueDate  when it is due
 	 */
-	public Loan(Book book, Borrower borrower, Branch branch, LocalDateTime dateOut, LocalDate dueDate) {
+	public Loan(final Book book, final Borrower borrower, final Branch branch,
+			final LocalDateTime dateOut, final LocalDate dueDate) {
 		this.book = book;
 		this.borrower = borrower;
 		this.branch = branch;
@@ -89,7 +90,7 @@ public class Loan {
 	 * Change when the book was checked out.
 	 * @param dateOut the new checked-out date, which must not be null.
 	 */
-	public void setDateOut(LocalDateTime dateOut) {
+	public void setDateOut(final LocalDateTime dateOut) {
 		this.dateOut = dateOut;
 	}
 
@@ -105,7 +106,7 @@ public class Loan {
 	 * Change the book's due date.
 	 * @param dueDate the new due date, which must not be null.
 	 */
-	public void setDueDate(LocalDate dueDate) {
+	public void setDueDate(final LocalDate dueDate) {
 		this.dueDate = dueDate;
 	}
 
