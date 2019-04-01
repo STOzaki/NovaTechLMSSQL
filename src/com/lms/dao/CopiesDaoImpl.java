@@ -94,7 +94,7 @@ public class CopiesDaoImpl {
 		prepareStatement.executeUpdate();
 	}
 
-	Map<Book, Integer> getAllBranchCopies(Branch branch) throws SQLException {
+	public Map<Book, Integer> getAllBranchCopies(Branch branch) throws SQLException {
 		Map<Book, Integer> returnBranchHashMap = new HashMap<Book, Integer>();
 
 		PreparedStatement prepareStatement = null;
@@ -112,7 +112,7 @@ public class CopiesDaoImpl {
 		return returnBranchHashMap;
 	}
 	
-	Map<Branch, Integer> getAllBookCopies(Book book) throws SQLException {
+	public Map<Branch, Integer> getAllBookCopies(Book book) throws SQLException {
 		Map<Branch, Integer> returnBookHashMap = new HashMap<Branch, Integer>();
 
 		PreparedStatement prepareStatement = null;
@@ -130,7 +130,7 @@ public class CopiesDaoImpl {
 		return returnBookHashMap;
 	}
 
-	Map<Branch, Map<Book, Integer>> getAllCopies() throws SQLException {
+	public Map<Branch, Map<Book, Integer>> getAllCopies() throws SQLException {
 		Map<Branch, Map<Book, Integer>> returnBookBranchHashMap = new HashMap<>();
 
 		PreparedStatement prepareStatement = null;
