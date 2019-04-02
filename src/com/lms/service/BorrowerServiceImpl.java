@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import com.lms.dao.BookLoansDaoImpl;
 import com.lms.dao.BorrowerDaoImpl;
 import com.lms.dao.CopiesDaoImpl;
+import com.lms.dao.LibraryBranchDaoImpl;
 import com.lms.model.Book;
 import com.lms.model.Borrower;
 import com.lms.model.Branch;
@@ -24,12 +25,15 @@ public class BorrowerServiceImpl {
 	private BorrowerDaoImpl borrowerDaoImpl;
 	private BookLoansDaoImpl loanDaoImpl;
 	private CopiesDaoImpl copiesDaoImpl;
-	private static final Logger LOGGER = Logger.getLogger(LibrarianServiceImpl.class.getName());
+	private LibraryBranchDaoImpl branchDaoImpl;
+	private static final Logger LOGGER = Logger.getLogger(BorrowerDaoImpl.class.getName());
 
-	public BorrowerServiceImpl(BorrowerDaoImpl borrowerDaoImpl, BookLoansDaoImpl loanDaoImpl, CopiesDaoImpl copiesDaoImpl) {
+	public BorrowerServiceImpl(BorrowerDaoImpl borrowerDaoImpl, BookLoansDaoImpl loanDaoImpl,
+			CopiesDaoImpl copiesDaoImpl, LibraryBranchDaoImpl branchDaoImpl) {
 		this.borrowerDaoImpl = borrowerDaoImpl;
 		this.loanDaoImpl = loanDaoImpl;
 		this.copiesDaoImpl = copiesDaoImpl;
+		this.branchDaoImpl = branchDaoImpl;
 	}
 
 	public Loan borrowBook(Borrower borrower, Book book, Branch branch, LocalDateTime dateOut, LocalDate dueDate) {
@@ -117,5 +121,16 @@ public class BorrowerServiceImpl {
 			LOGGER.log(Level.WARNING, "Failed to get borrower with cardNo = " + cardNo);
 		}
 		return borrower;
+	}
+	
+
+	public List<Branch> getAllBranches() {
+		List<Branch> listOfBranches = new ArrayList<>();
+		try {
+			listOfBranches = branchDaoImpl.getAll();
+		} catch (SQLException e) {
+			LOGGER.log(Level.WARNING, "Failed to give a list of all branches in the branch table");
+		}
+		return listOfBranches;
 	}
 }
