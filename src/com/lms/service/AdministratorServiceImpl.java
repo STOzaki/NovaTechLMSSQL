@@ -27,7 +27,7 @@ public class AdministratorServiceImpl {
 	private LibraryBranchDaoImpl branchDaoImpl;
 	private BorrowerDaoImpl borrowerDaoImpl;
 	private BookLoansDaoImpl loanDaoImpl;
-	private static final Logger LOGGER = Logger.getLogger(LibrarianServiceImpl.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(AdministratorServiceImpl.class.getName());
 
 	public AdministratorServiceImpl(BookDaoImpl bookDaoImpl, AuthorDaoImpl authorDaoImpl,
 			PublisherDaoImpl publisherDaoImpl, LibraryBranchDaoImpl branchDaoImpl,
