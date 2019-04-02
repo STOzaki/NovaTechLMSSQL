@@ -64,12 +64,12 @@ public interface BorrowerService extends Service {
 	List<Branch> getAllBranchesWithLoan(Borrower borrower);
 
 	/**
-	 * Get all books the borrower has borrowed from any library branch.
+	 * Get all book loans the borrower has borrowed from any library branch.
 	 * 
 	 * @param borrower in question
-	 * @return the list of books the borrower has out from any library.
+	 * @return the list of book loans the borrower has out from any library.
 	 */
-	List<Book> getAllBorrowedBooks(Borrower borrower);
+	List<Loan> getAllBorrowedBooks(Borrower borrower);
 
 	/**
 	 * Get Borrower with the specified cardNo
