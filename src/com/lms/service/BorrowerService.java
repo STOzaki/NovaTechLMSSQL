@@ -1,5 +1,6 @@
 package com.lms.service;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,7 +30,7 @@ public interface BorrowerService extends Service {
 	 * @param dueDate the date the book is due
 	 * @return the object representing the loan
 	 */
-	Loan borrowBook(Borrower borrower, Book book, Branch branch, LocalDateTime dateOut, LocalDate dueDate);
+	Loan borrowBook(Borrower borrower, Book book, Branch branch, LocalDateTime dateOut, LocalDate dueDate) throws SQLException;
 
 	/**
 	 * Get all book-copy counts for the given branch.
@@ -38,7 +39,7 @@ public interface BorrowerService extends Service {
 	 * @return a mapping from books in that library to the number of copies of each
 	 *         that it has.
 	 */
-	Map<Book, Integer> getAllBranchCopies(Branch branch);
+	Map<Book, Integer> getAllBranchCopies(Branch branch) throws SQLException;
 
 	/**
 	 * Handle a returned book: if there is an outstanding loan of the given book to
@@ -53,7 +54,7 @@ public interface BorrowerService extends Service {
 	 * @param dueDate TODO: document this once author clarifies its purpose
 	 * @return true on success, false if the book was overdue
 	 */
-	boolean returnBook(Borrower borrower, Book book, Branch branch, LocalDate dueDate);
+	boolean returnBook(Borrower borrower, Book book, Branch branch, LocalDate dueDate) throws SQLException;
 
 	/**
 	 * Get all branches from which the borrower has an outstanding loan.
@@ -61,7 +62,7 @@ public interface BorrowerService extends Service {
 	 * @param borrower in question
 	 * @return all branches the borrower owes a book return to.
 	 */
-	List<Branch> getAllBranchesWithLoan(Borrower borrower);
+	List<Branch> getAllBranchesWithLoan(Borrower borrower) throws SQLException;
 
 	/**
 	 * Get all book loans the borrower has borrowed from any library branch.
@@ -69,7 +70,7 @@ public interface BorrowerService extends Service {
 	 * @param borrower in question
 	 * @return the list of book loans the borrower has out from any library.
 	 */
-	List<Loan> getAllBorrowedBooks(Borrower borrower);
+	List<Loan> getAllBorrowedBooks(Borrower borrower) throws SQLException;
 
 	/**
 	 * Get Borrower with the specified cardNo
@@ -77,6 +78,6 @@ public interface BorrowerService extends Service {
 	 * @param cardNo the borrower's cardNo
 	 * @return Borrower or null if there is no Borrower with that cardNo
 	 */
-	Borrower getBorrower(int cardNo);
+	Borrower getBorrower(int cardNo) throws SQLException;
 
 }
