@@ -93,7 +93,7 @@ public class BorrowerServiceTest {
 		// due date is two weeks from now
 		testLoan = loanDaoImpl.create(testBook, testBorrower, testBranch, LocalDateTime.now(), LocalDate.now().plusWeeks(2));
 		copiesDaoImpl.setCopies(testBranch, testBook, noOfCopies);
-		borrowerService = new BorrowerServiceImpl(borrowerDaoImpl, loanDaoImpl, copiesDaoImpl, branchDaoImpl);
+		borrowerService = new BorrowerServiceImpl(borrowerDaoImpl, loanDaoImpl, copiesDaoImpl, branchDaoImpl, conn);
 	}
 	
 	@AfterEach
