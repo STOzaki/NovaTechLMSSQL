@@ -27,6 +27,7 @@ public class BorrowerServiceImpl {
 	private BookLoansDaoImpl loanDaoImpl;
 	private CopiesDaoImpl copiesDaoImpl;
 	private LibraryBranchDaoImpl branchDaoImpl;
+	private Connection conn;
 	private static final Logger LOGGER = Logger.getLogger(BorrowerDaoImpl.class.getName());
 
 	public BorrowerServiceImpl(BorrowerDaoImpl borrowerDaoImpl, BookLoansDaoImpl loanDaoImpl,
@@ -35,15 +36,18 @@ public class BorrowerServiceImpl {
 		this.loanDaoImpl = loanDaoImpl;
 		this.copiesDaoImpl = copiesDaoImpl;
 		this.branchDaoImpl = branchDaoImpl;
+		this.conn = conn;
 	}
 
 	public Loan borrowBook(Borrower borrower, Book book, Branch branch, LocalDateTime dateOut, LocalDate dueDate) {
 		Loan newLoan = null;
 		try {
 			newLoan = loanDaoImpl.create(book, borrower, branch, dateOut, dueDate);
+			conn.commit();
 		} catch (SQLException e) {
 			LOGGER.log(Level.WARNING, "Failed to create a loan with Borrower CardNo = " + borrower.getCardNo() + " and book Id = " +
 						book.getId() + " and branch Id = " + branch.getId());
+			rollingBack();
 		}
 		return newLoan;
 	}
@@ -73,9 +77,11 @@ public class BorrowerServiceImpl {
 				try {
 					loanDaoImpl.delete(foundLoan);
 					returnedBook = true;
+					conn.commit();
 				} catch (SQLException e) {
 					LOGGER.log(Level.WARNING, "Failed to delete loan entry with Borrower CardNo = " + borrower.getCardNo() + " and book Id = " +
 							book.getId() + " and branch Id = " + branch.getId());
+					rollingBack();
 				}
 			}
 		}
@@ -133,5 +139,16 @@ public class BorrowerServiceImpl {
 			LOGGER.log(Level.WARNING, "Failed to give a list of all branches in the branch table");
 		}
 		return listOfBranches;
+	}
+	
+	private void rollingBack() {
+		if (conn != null) {
+            try {
+                LOGGER.log(Level.WARNING, "Transaction is being rolled back");
+                conn.rollback();
+            } catch(SQLException excep) {
+            	LOGGER.log(Level.WARNING, excep.getMessage() + " in this class: " + excep.getClass());
+            }
+		}
 	}
 }
