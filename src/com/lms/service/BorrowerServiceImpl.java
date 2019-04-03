@@ -5,6 +5,8 @@ import java.sql.Connection;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import com.lms.customExceptions.DeleteException;
+import com.lms.customExceptions.InsertException;
 import com.lms.dao.BookLoansDaoImpl;
 import com.lms.dao.BorrowerDaoImpl;
 import com.lms.dao.CopiesDaoImpl;
@@ -39,7 +41,7 @@ public class BorrowerServiceImpl {
 		this.conn = conn;
 	}
 
-	public Loan borrowBook(Borrower borrower, Book book, Branch branch, LocalDateTime dateOut, LocalDate dueDate) {
+	public Loan borrowBook(Borrower borrower, Book book, Branch branch, LocalDateTime dateOut, LocalDate dueDate) throws InsertException {
 		Loan newLoan = null;
 		try {
 			newLoan = loanDaoImpl.create(book, borrower, branch, dateOut, dueDate);
@@ -48,6 +50,7 @@ public class BorrowerServiceImpl {
 			LOGGER.log(Level.WARNING, "Failed to create a loan with Borrower CardNo = " + borrower.getCardNo() + " and book Id = " +
 						book.getId() + " and branch Id = " + branch.getId());
 			rollingBack();
+			throw new InsertException("Failed to create a loan in Book Loan");
 		}
 		return newLoan;
 	}
@@ -62,7 +65,7 @@ public class BorrowerServiceImpl {
 		return listAllBranchCopies;
 	}
 	
-	public boolean returnBook(Borrower borrower, Book book, Branch branch, LocalDate dueDate) {
+	public boolean returnBook(Borrower borrower, Book book, Branch branch, LocalDate dueDate) throws DeleteException {
 		boolean returnedBook = false;
 		Loan foundLoan = null;
 		try {
@@ -82,6 +85,7 @@ public class BorrowerServiceImpl {
 					LOGGER.log(Level.WARNING, "Failed to delete loan entry with Borrower CardNo = " + borrower.getCardNo() + " and book Id = " +
 							book.getId() + " and branch Id = " + branch.getId());
 					rollingBack();
+					throw new DeleteException("Failed to delete book loan");
 				}
 			}
 		}

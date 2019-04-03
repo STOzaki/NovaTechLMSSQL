@@ -3,6 +3,8 @@ package com.lms.service;
 import java.sql.SQLException;
 import java.sql.Connection;
 
+import com.lms.customExceptions.UnknownSQLException;
+import com.lms.customExceptions.UpdateException;
 import com.lms.dao.BookDaoImpl;
 import com.lms.dao.CopiesDaoImpl;
 import com.lms.dao.LibraryBranchDaoImpl;
@@ -32,24 +34,26 @@ public class LibrarianServiceImpl implements LibrarianService {
 		this.conn = conn;
 	}
 
-	public void updateBranch(Branch branch) {
+	public void updateBranch(Branch branch) throws UpdateException {
 		try {
 			branchDaoImpl.update(branch);
 			conn.commit();
 		} catch (SQLException e) {
 			LOGGER.log(Level.WARNING, "Failed to update a particular branch");
 			rollingBack();
+			throw new UpdateException("Failed to update branch");
 		}
 	}
 	
 
-	public void setBranchCopies(Branch branch, Book book, int noOfCopies) {
+	public void setBranchCopies(Branch branch, Book book, int noOfCopies) throws UnknownSQLException {
 		try {
 			copiesDaoImpl.setCopies(branch, book, noOfCopies);
 			conn.commit();
 		} catch (SQLException e) {
 			LOGGER.log(Level.WARNING, "Failed to set copies for book_copies with BranchId = " + branch.getId() + " and BookId = " + book.getId());
 			rollingBack();
+			throw new UnknownSQLException("Failed to set Branch Copies", e);
 		}
 	}
 	
