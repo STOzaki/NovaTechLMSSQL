@@ -51,6 +51,16 @@ public class MainMenu {
 		this.inStream = new Scanner(in);
 		this.outStream = out;
 		
+		// turn off auto commit
+        try {
+			conn.setAutoCommit(false);
+		} catch (SQLException e) {
+			LOGGER.log(Level.WARNING, "failed to set auto commit with error message: " + e.getMessage() +
+					" for class " + e.getClass());
+			println("Warning: we have a problem with setting up our connection to the database,");
+			println("so you may experience so problems. (Thank you)");
+		}
+		
 		borrowerService = new BorrowerServiceImpl(new BorrowerDaoImpl(conn), new BookLoansDaoImpl(conn),
 				new CopiesDaoImpl(conn), new LibraryBranchDaoImpl(conn));
 		adminService = new AdministratorServiceImpl(new BookDaoImpl(conn), new AuthorDaoImpl(conn),
