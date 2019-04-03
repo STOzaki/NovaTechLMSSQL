@@ -3,7 +3,7 @@ package com.lms.customExceptions;
 @SuppressWarnings("serial")
 public class TransactionException extends Exception {
 
-	public TransactionException(String errorMessage) {
+	protected TransactionException(String errorMessage) {
 		super(errorMessage);
 	}
 }
