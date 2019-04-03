@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.lms.customExceptions.TransactionException;
 import com.lms.model.Author;
 import com.lms.model.Book;
 import com.lms.model.Borrower;
@@ -27,7 +28,7 @@ public interface AdministratorService extends Service {
 	 * @param publisher the publisher of the book
 	 * @return the newly-created book
 	 */
-	Book createBook(String title, Author author, Publisher publisher) throws SQLException;
+	Book createBook(String title, Author author, Publisher publisher) throws TransactionException;
 //	/**
 //	 * Create a book with the given title, author, and publisher and store it in the
 //	 * database.
@@ -44,12 +45,12 @@ public interface AdministratorService extends Service {
 	 *
 	 * @param book the book to update in the database.
 	 */
-	void updateBook(Book book) throws SQLException;
+	void updateBook(Book book) throws TransactionException;
 	/**
 	 * Remove the given book from the database.
 	 * @param book the book to remove
 	 */
-	void deleteBook(Book book) throws SQLException;
+	void deleteBook(Book book) throws TransactionException;
 	/**
 	 * Get a list (order should not be relied on) of all the books in the database.
 	 * @return all the books in the database.
@@ -61,7 +62,7 @@ public interface AdministratorService extends Service {
 	 * @param name the name of the author
 	 * @return the newly created Author object
 	 */
-	Author createAuthor(String name) throws SQLException;
+	Author createAuthor(String name) throws TransactionException;
 
 	/**
 	 * Update the database record for the given author object to match its current
@@ -69,12 +70,12 @@ public interface AdministratorService extends Service {
 	 *
 	 * @param author the author to update in the database.
 	 */
-	void updateAuthor(Author author) throws SQLException;
+	void updateAuthor(Author author) throws TransactionException;
 	/**
 	 * Remove the given author from the database.
 	 * @param author the author to remove
 	 */
-	void deleteAuthor(Author author) throws SQLException;
+	void deleteAuthor(Author author) throws TransactionException;
 	/**
 	 * Get a list (order should not be relied on) of all the authors in the database.
 	 * @return all the authors in the database.
@@ -88,7 +89,7 @@ public interface AdministratorService extends Service {
 	 * @param name the publisher's name
 	 * @return the newly created publisher
 	 */
-	Publisher createPublisher(String name) throws SQLException;
+	Publisher createPublisher(String name) throws TransactionException;
 
 	/**
 	 * Create a publisher object with full state and add the publisher to the
@@ -99,7 +100,7 @@ public interface AdministratorService extends Service {
 	 * @param phone   the publisher's phone number
 	 * @return the newly created publisher
 	 */
-	Publisher createPublisher(String name, String address, String phone) throws SQLException;
+	Publisher createPublisher(String name, String address, String phone) throws TransactionException;
 
 	/**
 	 * Update the database record representing the given publisher to match its
@@ -107,12 +108,12 @@ public interface AdministratorService extends Service {
 	 *
 	 * @param publisher the publisher to update in the database
 	 */
-	void updatePublisher(Publisher publisher) throws SQLException;
+	void updatePublisher(Publisher publisher) throws TransactionException;
 	/**
 	 * Remove the given publisher from the database.
 	 * @param publisher the publisher to remove.
 	 */
-	void deletePublisher(Publisher publisher) throws SQLException;
+	void deletePublisher(Publisher publisher) throws TransactionException;
 
 	/**
 	 * Get a list (order should not be relied on) of all the publishers in the
@@ -128,17 +129,17 @@ public interface AdministratorService extends Service {
 	 * @param address the address of the branch
 	 * @return the newly created branch object
 	 */
-	Branch createBranch(String name, String address) throws SQLException;
+	Branch createBranch(String name, String address) throws TransactionException;
 	/**
 	 * Remove the given branch from the database.
 	 * @param branch the branch to remove
 	 */
-	void deleteBranch(Branch branch) throws SQLException;
+	void deleteBranch(Branch branch) throws TransactionException;
 	/**
 	 * Update the database row representing the given branch with its state.
 	 * @param branch the branch to update in the database
 	 */
-	void updateBranch(Branch branch) throws SQLException;
+	void updateBranch(Branch branch) throws TransactionException;
 	// getAllBranches() is specified in the Service interface
 
 	/**
@@ -150,7 +151,7 @@ public interface AdministratorService extends Service {
 	 * @param phone   the borrower's phone number
 	 * @return the newly created borrower object
 	 */
-	Borrower createBorrower(String name, String address, String phone) throws SQLException;
+	Borrower createBorrower(String name, String address, String phone) throws TransactionException;
 
 	/**
 	 * Update the database row representing the given borrower with the object's
@@ -158,12 +159,12 @@ public interface AdministratorService extends Service {
 	 *
 	 * @param borrower the borrower to update in the database
 	 */
-	void updateBorrower(Borrower borrower) throws SQLException;
+	void updateBorrower(Borrower borrower) throws TransactionException;
 	/**
 	 * Remove the given borrower from the database.
 	 * @param borrower the borrower to remove
 	 */
-	void deleteBorrower(Borrower borrower) throws SQLException;
+	void deleteBorrower(Borrower borrower) throws TransactionException;
 
 	/**
 	 * Get a list (order should not be relied on) of all the borrowers in the
@@ -184,7 +185,7 @@ public interface AdministratorService extends Service {
 	 * @param dueDate the new due date for the loan
 	 * @return true on success, false if no such loan currently exists
 	 */
-	boolean overrideDueDateForLoan(Book book, Borrower borrower, Branch branch, LocalDate dueDate) throws SQLException;
+	boolean overrideDueDateForLoan(Book book, Borrower borrower, Branch branch, LocalDate dueDate) throws TransactionException;
 
 	/**
 	 * Get a list (order should not be relied on) of all the loans in the

@@ -1,8 +1,8 @@
 package com.lms.service;
 
-import java.sql.SQLException;
 import java.util.List;
 
+import com.lms.customExceptions.TransactionException;
 import com.lms.model.Branch;
 
 /**
@@ -18,5 +18,5 @@ public interface Service {
 	 *
 	 * @return all the borrowers in the database.
 	 */
-	List<Branch> getAllBranches() throws SQLException;
+	List<Branch> getAllBranches() throws TransactionException;
 }
