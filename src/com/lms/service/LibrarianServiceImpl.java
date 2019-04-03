@@ -21,6 +21,7 @@ public class LibrarianServiceImpl implements LibrarianService {
 	private LibraryBranchDaoImpl branchDaoImpl;
 	private BookDaoImpl bookDaoImpl;
 	private CopiesDaoImpl copiesDaoImpl;
+	private Connection conn;
 	private static final Logger LOGGER = Logger.getLogger(LibrarianServiceImpl.class.getName());
 
 	public LibrarianServiceImpl(LibraryBranchDaoImpl branchDaoImpl, BookDaoImpl bookDaoImpl,
@@ -28,13 +29,16 @@ public class LibrarianServiceImpl implements LibrarianService {
 		this.branchDaoImpl = branchDaoImpl;
 		this.bookDaoImpl = bookDaoImpl;
 		this.copiesDaoImpl = copiesDaoImpl;
+		this.conn = conn;
 	}
 
 	public void updateBranch(Branch branch) {
 		try {
 			branchDaoImpl.update(branch);
+			conn.commit();
 		} catch (SQLException e) {
 			LOGGER.log(Level.WARNING, "Failed to update a particular branch");
+			rollingBack();
 		}
 	}
 	
@@ -42,8 +46,10 @@ public class LibrarianServiceImpl implements LibrarianService {
 	public void setBranchCopies(Branch branch, Book book, int noOfCopies) {
 		try {
 			copiesDaoImpl.setCopies(branch, book, noOfCopies);
+			conn.commit();
 		} catch (SQLException e) {
 			LOGGER.log(Level.WARNING, "Failed to set copies for book_copies with BranchId = " + branch.getId() + " and BookId = " + book.getId());
+			rollingBack();
 		}
 	}
 	
@@ -76,5 +82,16 @@ public class LibrarianServiceImpl implements LibrarianService {
 			LOGGER.log(Level.WARNING, "Failed to give a list of all branches in the branch table");
 		}
 		return listOfBranches;
+	}
+	
+	private void rollingBack() {
+		if (conn != null) {
+            try {
+                LOGGER.log(Level.WARNING, "Transaction is being rolled back");
+                conn.rollback();
+            } catch(SQLException excep) {
+            	LOGGER.log(Level.WARNING, excep.getMessage() + " in this class: " + excep.getClass());
+            }
+		}
 	}
 }
