@@ -943,6 +943,7 @@ public class MainMenu {
 			while((nextLine = br.readLine()) != null) {
 				authentication.add(nextLine);
 			}
+			br.close();
 		} catch (IOException e) {
 			LOGGER.log(Level.SEVERE, "I/O Error cannot read .config file");
 		}
