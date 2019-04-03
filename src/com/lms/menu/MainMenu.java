@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.List;
 import java.util.Scanner;
 import java.io.IOException;
 import java.io.Reader;
@@ -61,18 +60,6 @@ public class MainMenu {
 				println("I am sorry but that is not a user type. Please try again.");
 			}
 		}
-	}
-	
-	private <T> void printList(List<T> list) {
-		list.stream().forEach(l -> {
-			try {
-				outStream.append(String.valueOf(list.indexOf(l) + 1) + ") ");
-				println(l.toString());
-			} catch (IOException e) {
-				LOGGER.log(Level.SEVERE, "I/O Error while iterating through a list");
-			}
-		});
-		println(String.valueOf(list.size() + 1 + ") " + "Quit"));
 	}
 
 	/**
