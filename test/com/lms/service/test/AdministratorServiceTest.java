@@ -96,7 +96,7 @@ public class AdministratorServiceTest {
 		// due date is two weeks from now
 		testLoan = loanDaoImpl.create(testBook, testBorrower, testBranch, LocalDateTime.now(), officialDueDate);
 		adminService = new AdministratorServiceImpl(bookDaoImpl, authorDaoImpl, publisherDaoImpl,
-				branchDaoImpl, borrowerDaoImpl, loanDaoImpl);
+				branchDaoImpl, borrowerDaoImpl, loanDaoImpl, conn);
 	}
 	
 	@AfterEach
