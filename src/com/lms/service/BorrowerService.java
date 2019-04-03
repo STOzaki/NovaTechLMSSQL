@@ -46,15 +46,13 @@ public interface BorrowerService extends Service {
 	 * the given borrower from the given branch, and the book is not overdue, remove
 	 * the loan from the database and return true. If it is overdue, return false.
 	 *
-	 * <p>TODO: What to do when no matching loan exists?
-	 *
 	 * @param borrower the borrower returning the book
 	 * @param book the book being returned
 	 * @param branch the branch from which it was borrowed
 	 * @param returnDate the date the borrower returned the book
-	 * @return true on success, false if the book was overdue
+	 * @return true on success, false if the book was overdue, and null if it was not present
 	 */
-	boolean returnBook(Borrower borrower, Book book, Branch branch, LocalDate returnDate) throws SQLException;
+	Boolean returnBook(Borrower borrower, Book book, Branch branch, LocalDate returnDate) throws SQLException;
 
 	/**
 	 * Get all branches from which the borrower has an outstanding loan.
