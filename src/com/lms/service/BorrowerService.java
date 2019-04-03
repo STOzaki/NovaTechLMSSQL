@@ -51,10 +51,10 @@ public interface BorrowerService extends Service {
 	 * @param borrower the borrower returning the book
 	 * @param book the book being returned
 	 * @param branch the branch from which it was borrowed
-	 * @param dueDate TODO: document this once author clarifies its purpose
+	 * @param returnDate the date the borrower returned the book
 	 * @return true on success, false if the book was overdue
 	 */
-	boolean returnBook(Borrower borrower, Book book, Branch branch, LocalDate dueDate) throws SQLException;
+	boolean returnBook(Borrower borrower, Book book, Branch branch, LocalDate returnDate) throws SQLException;
 
 	/**
 	 * Get all branches from which the borrower has an outstanding loan.
