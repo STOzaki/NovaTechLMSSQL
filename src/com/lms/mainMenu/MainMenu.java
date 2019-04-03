@@ -62,12 +62,12 @@ public class MainMenu {
 		}
 		
 		borrowerService = new BorrowerServiceImpl(new BorrowerDaoImpl(conn), new BookLoansDaoImpl(conn),
-				new CopiesDaoImpl(conn), new LibraryBranchDaoImpl(conn));
+				new CopiesDaoImpl(conn), new LibraryBranchDaoImpl(conn), conn);
 		adminService = new AdministratorServiceImpl(new BookDaoImpl(conn), new AuthorDaoImpl(conn),
 				new PublisherDaoImpl(conn), new LibraryBranchDaoImpl(conn),
-				new BorrowerDaoImpl(conn), new BookLoansDaoImpl(conn));
+				new BorrowerDaoImpl(conn), new BookLoansDaoImpl(conn), conn);
 		libraryService = new LibrarianServiceImpl(new LibraryBranchDaoImpl(conn), new BookDaoImpl(conn),
-				new CopiesDaoImpl(conn));
+				new CopiesDaoImpl(conn), conn);
 		
 	}
 
