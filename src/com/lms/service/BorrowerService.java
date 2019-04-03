@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
+import com.lms.customExceptions.TransactionException;
 import com.lms.model.Book;
 import com.lms.model.Borrower;
 import com.lms.model.Branch;
@@ -30,7 +31,7 @@ public interface BorrowerService extends Service {
 	 * @param dueDate the date the book is due
 	 * @return the object representing the loan
 	 */
-	Loan borrowBook(Borrower borrower, Book book, Branch branch, LocalDateTime dateOut, LocalDate dueDate) throws SQLException;
+	Loan borrowBook(Borrower borrower, Book book, Branch branch, LocalDateTime dateOut, LocalDate dueDate) throws TransactionException;
 
 	/**
 	 * Get all book-copy counts for the given branch.
@@ -52,7 +53,7 @@ public interface BorrowerService extends Service {
 	 * @param returnDate the date the borrower returned the book
 	 * @return true on success, false if the book was overdue, and null if it was not present
 	 */
-	Boolean returnBook(Borrower borrower, Book book, Branch branch, LocalDate returnDate) throws SQLException;
+	Boolean returnBook(Borrower borrower, Book book, Branch branch, LocalDate returnDate) throws TransactionException;
 
 	/**
 	 * Get all branches from which the borrower has an outstanding loan.
