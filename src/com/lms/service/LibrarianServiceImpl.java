@@ -1,6 +1,7 @@
 package com.lms.service;
 
 import java.sql.SQLException;
+import java.sql.Connection;
 
 import com.lms.dao.BookDaoImpl;
 import com.lms.dao.CopiesDaoImpl;
@@ -22,7 +23,8 @@ public class LibrarianServiceImpl implements LibrarianService {
 	private CopiesDaoImpl copiesDaoImpl;
 	private static final Logger LOGGER = Logger.getLogger(LibrarianServiceImpl.class.getName());
 
-	public LibrarianServiceImpl(LibraryBranchDaoImpl branchDaoImpl, BookDaoImpl bookDaoImpl, CopiesDaoImpl copiesDaoImpl) {
+	public LibrarianServiceImpl(LibraryBranchDaoImpl branchDaoImpl, BookDaoImpl bookDaoImpl,
+			CopiesDaoImpl copiesDaoImpl, Connection conn) {
 		this.branchDaoImpl = branchDaoImpl;
 		this.bookDaoImpl = bookDaoImpl;
 		this.copiesDaoImpl = copiesDaoImpl;

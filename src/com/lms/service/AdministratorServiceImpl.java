@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.sql.Connection;
 
 import com.lms.dao.AuthorDaoImpl;
 import com.lms.dao.BookDaoImpl;
@@ -31,7 +32,7 @@ public class AdministratorServiceImpl {
 
 	public AdministratorServiceImpl(BookDaoImpl bookDaoImpl, AuthorDaoImpl authorDaoImpl,
 			PublisherDaoImpl publisherDaoImpl, LibraryBranchDaoImpl branchDaoImpl,
-			BorrowerDaoImpl borrowerDaoImpl, BookLoansDaoImpl loanDaoImpl) {
+			BorrowerDaoImpl borrowerDaoImpl, BookLoansDaoImpl loanDaoImpl, Connection conn) {
 		this.bookDaoImpl = bookDaoImpl;
 		this.authorDaoImpl = authorDaoImpl;
 		this.publisherDaoImpl = publisherDaoImpl;
