@@ -1,6 +1,7 @@
 package com.lms.service;
 
 import java.sql.SQLException;
+import java.sql.Connection;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -29,7 +30,7 @@ public class BorrowerServiceImpl {
 	private static final Logger LOGGER = Logger.getLogger(BorrowerDaoImpl.class.getName());
 
 	public BorrowerServiceImpl(BorrowerDaoImpl borrowerDaoImpl, BookLoansDaoImpl loanDaoImpl,
-			CopiesDaoImpl copiesDaoImpl, LibraryBranchDaoImpl branchDaoImpl) {
+			CopiesDaoImpl copiesDaoImpl, LibraryBranchDaoImpl branchDaoImpl, Connection conn) {
 		this.borrowerDaoImpl = borrowerDaoImpl;
 		this.loanDaoImpl = loanDaoImpl;
 		this.copiesDaoImpl = copiesDaoImpl;
