@@ -1,29 +1,19 @@
-package com.lms.mainMenu;
+package com.lms.menu;
 
+import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.time.DateTimeException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
 
 import com.lms.dao.AuthorDaoImpl;
 import com.lms.dao.BookDaoImpl;
 import com.lms.dao.BookLoansDaoImpl;
 import com.lms.dao.BorrowerDaoImpl;
-import com.lms.dao.CopiesDaoImpl;
 import com.lms.dao.LibraryBranchDaoImpl;
 import com.lms.dao.PublisherDaoImpl;
 import com.lms.model.Author;
@@ -33,23 +23,18 @@ import com.lms.model.Branch;
 import com.lms.model.Loan;
 import com.lms.model.Publisher;
 import com.lms.service.AdministratorServiceImpl;
-import com.lms.service.BorrowerServiceImpl;
-import com.lms.service.LibrarianServiceImpl;
 
-public class MainMenu {
-	
-	private BorrowerServiceImpl borrowerService;
+public class AdminMenu {
 	private AdministratorServiceImpl adminService;
-	private LibrarianServiceImpl libraryService;
 	
 	private final Scanner inStream;
 	private final Appendable outStream;
 	
-	private static final Logger LOGGER = Logger.getLogger(MainMenu.class.getName());
-
-	public MainMenu(Connection conn, Reader in, Appendable out) {
-		this.inStream = new Scanner(in);
-		this.outStream = out;
+	private static final Logger LOGGER = Logger.getLogger(AdminMenu.class.getName());
+	
+	public AdminMenu(Connection conn, Scanner inStream, Appendable outStream) {
+		this.inStream = inStream;
+		this.outStream = outStream;
 		
 		// turn off auto commit
         try {
@@ -60,42 +45,13 @@ public class MainMenu {
 			println("Warning: we have a problem with setting up our connection to the database,");
 			println("so you may experience so problems. (Thank you)");
 		}
-		
-		borrowerService = new BorrowerServiceImpl(new BorrowerDaoImpl(conn), new BookLoansDaoImpl(conn),
-				new CopiesDaoImpl(conn), new LibraryBranchDaoImpl(conn), conn);
+
 		adminService = new AdministratorServiceImpl(new BookDaoImpl(conn), new AuthorDaoImpl(conn),
 				new PublisherDaoImpl(conn), new LibraryBranchDaoImpl(conn),
-				new BorrowerDaoImpl(conn), new BookLoansDaoImpl(conn), conn);
-		libraryService = new LibrarianServiceImpl(new LibraryBranchDaoImpl(conn), new BookDaoImpl(conn),
-				new CopiesDaoImpl(conn), conn);
-		
-	}
-
-	public void start() {
-		boolean run = true;
-		while(run) {
-			println("What kind of user are you? ((A)dmin, (L)ibrarian, or (B)orrower) or (Q)uit");
-			String userChoice = inStream.nextLine();
-			switch(userChoice) {
-			case "A": case "a": case "Admin":
-				theAdmin();
-				break;
-			case "L": case "l": case "Librarian":
-				theLibrarian();
-				break;
-			case "B": case "b": case "Borrower":
-				theBorrower();
-				break;
-			case "Q": case "q": case "Quit":
-				run = false;
-				break;
-			default:
-				println("I am sorry but that is not a user type. Please try again.");
-			}
-		}
+				new BorrowerDaoImpl(conn), new BookLoansDaoImpl(conn), conn);	
 	}
 	
-	private boolean theAdmin() {
+	public boolean start() {
 		boolean accessRun = true;
 		while(accessRun) {
 			println("What would you like to do?");
@@ -592,320 +548,7 @@ public class MainMenu {
 		println("5) Borrowers");
 		println("6) Return to Admin Menu");
 	}
-	
-	private boolean theBorrower() {
-		boolean borrowerRun = true;
-		while(borrowerRun) {
-			println("Enter the your Card Number: (or 'quit' to exit.)");
-			try {
-				String answer = inStream.nextLine();
-				if(answer.equals("quit")) {
-					borrowerRun = false;
-				} else {
-					int theirCardNo = Integer.parseInt(answer);
-					Borrower foundBorrower = borrowerService.getBorrower(theirCardNo);
-					if(foundBorrower != null) {
-						accessGrantedToBorrower(foundBorrower);
-					} else {
-						println("Access Denied. That is not a valid cardno.");
-					}
-				}
-			} catch (NumberFormatException e) {
-				println("That is not a number");
-			}
-		}
-		return true;
-	}
-	
-	private boolean accessGrantedToBorrower(Borrower borrower) {
-		boolean accessRun = true;
-		while(accessRun) {
-			println("Choose an option:");
-			println("1)Check out a book");
-			println("2)Return a Book");
-			println("3)Quit to Previous");
-			try {
-				int borrowerChoice = Integer.parseInt(inStream.nextLine());
-				switch(borrowerChoice) {
-				case 1:
-					checkOutBookFromBranch(borrower);
-					break;
-				case 2:
-					returnABook(borrower);
-					break;
-				case 3:
-					accessRun = false;
-					break;
-				default:
-					println("That is not an option, please try again");
-					break;
-				}
-				
-			} catch (NumberFormatException e) {
-				println("That is not a number");
-			}
-		}
-		return true;
-	}
-	
-	private boolean returnABook(Borrower borrower) {
-		println("Pick the Branch you want to check out from:");
-		List<Branch> listOfAllBranches = borrowerService.getAllBranches();
-		printList(listOfAllBranches);
-		boolean runReturningABook = true;
-		while(runReturningABook) {
-			try {
-				int branchNum = Integer.parseInt(inStream.nextLine());
-				// -1 to keep in the range of the list (because the display will start from 1 not 0)
-				branchNum--;
-				if(branchNum == listOfAllBranches.size()) {
-					println("Back to Borrower Menu");
-					runReturningABook = false;
-				} else if(branchNum < listOfAllBranches.size() && branchNum >= 0) {
-					pickingBookToReturn(borrower, listOfAllBranches.get(branchNum));
-					runReturningABook = false;
-				} else {
-					println("That is not an option");
-				}
-			} catch (NumberFormatException e) {
-				println("That is not a number");
-			}
-		}
-		return true;
-	}
-	
-	private boolean pickingBookToReturn(Borrower borrower, Branch branch) {
-		List<Loan> BooksLoanedToBorrower = borrowerService.getAllBorrowedBooks(borrower);
-		List<Loan> BooksLoanedToBorrowerFromBranch = BooksLoanedToBorrower.parallelStream()
-				.filter(l -> l.getBranch().equals(branch)).collect(Collectors.toList());
-		printList(BooksLoanedToBorrowerFromBranch);
-		boolean runPickingBookToReturn = true;
-		while(runPickingBookToReturn) {
-			try {
-				int bookLoanedNum = Integer.parseInt(inStream.nextLine());
-				// -1 to keep in the range of the list (because the display will start from 1 not 0)
-				bookLoanedNum--;
-				if(bookLoanedNum == BooksLoanedToBorrowerFromBranch.size()) {
-					println("Back to Borrower Menu");
-					runPickingBookToReturn = false;
-				} else if(bookLoanedNum < BooksLoanedToBorrowerFromBranch.size() && bookLoanedNum >= 0) {
-					Loan loanWantToReturn = BooksLoanedToBorrowerFromBranch.get(bookLoanedNum);
-					Book returningBook = BooksLoanedToBorrowerFromBranch.get(bookLoanedNum).getBook();
-					boolean successOfReturn = borrowerService.returnBook(borrower,
-							returningBook, branch, LocalDate.now());
-					if(successOfReturn) {
-						println("Successfully returned");
-					} else {
-						println("Unfortunatly, you have returned " + returningBook.getTitle() + " too late");
-						println("That was due on " + loanWantToReturn);
-					}
-					runPickingBookToReturn = false;
-				} else {
-					println("That is not an option");
-				}
-			} catch (NumberFormatException e) {
-				println("That is not a number");
-			}
-		}
-		return true;
-		
-	}
-	
-	private boolean checkOutBookFromBranch(Borrower borrower) {
-		println("Pick the Branch you want to check out from:");
-		List<Branch> listOfAllBranches = borrowerService.getAllBranches();
-		printList(listOfAllBranches);
-		boolean runCheckingBranch = true;
-		while(runCheckingBranch) {
-			try {
-				int branchNum = Integer.parseInt(inStream.nextLine());
-				// -1 to keep in the range of the list (because the display will start from 1 not 0)
-				branchNum--;
-				if(branchNum == listOfAllBranches.size()) {
-					println("Back to Borrower Menu");
-					runCheckingBranch = false;
-				} else if(branchNum < listOfAllBranches.size() && branchNum >= 0) {
-					pickBookToCheckOut(borrower, listOfAllBranches.get(branchNum));
-					runCheckingBranch = false;
-				} else {
-					println("That is not an option");
-				}
-			} catch (NumberFormatException e) {
-				println("That is not a number");
-			}
-		}
-		return true;
-	}
-	
-	private boolean pickBookToCheckOut(Borrower borrower, Branch branch) {
-		Map<Book, Integer> mapOfAllBooksInBranch = borrowerService.getAllBranchCopies(branch);
-		List<Book>listOfAllBooksInBranch = new ArrayList<>(mapOfAllBooksInBranch.keySet());
-		printList(listOfAllBooksInBranch);
-		boolean runPickingABookToCheckOut = true;
-		while(runPickingABookToCheckOut) {
-			try {
-				int bookNum = Integer.parseInt(inStream.nextLine());
-				// -1 to keep in the range of the list (because the display will start from 1 not 0)
-				bookNum--;
-				if(bookNum == listOfAllBooksInBranch.size()) {
-					println("Back to Borrower Menu");
-					runPickingABookToCheckOut = false;
-				} else if(bookNum < listOfAllBooksInBranch.size() && bookNum >= 0) {
-					borrowingABook(borrower, branch, listOfAllBooksInBranch.get(bookNum));
-					runPickingABookToCheckOut = false;
-				} else {
-					println("That is not an option");
-				}
-			} catch (NumberFormatException e) {
-				println("That is not a number");
-			}
-		}
-		return true;
-	}
-	
-	private boolean borrowingABook(Borrower borrower, Branch branch, Book book) {
-		List<Loan> listOfAllLoansFromBorrower = borrowerService.getAllBorrowedBooks(borrower);
-		List<Loan> matchingListOfLoans = listOfAllLoansFromBorrower.parallelStream().filter(l -> l.getBook().equals(book) &&
-				l.getBorrower().equals(borrower) && l.getBranch().equals(branch)).collect(Collectors.toList());
-		// it found a loan that matched the primary Id
-		if(matchingListOfLoans.size() > 0) {
-			println("I am sorry but you have already borrowed that book: " + book.getTitle() + " from " + 
-					branch.getName() + " on " + matchingListOfLoans.get(0).getDateOut());
-		} else if(matchingListOfLoans.size() == 0) {
-			borrowerService.borrowBook(borrower, book, branch, LocalDateTime.now(), LocalDate.now().plusWeeks(1));
-		}
-		return true;
-	}
-	
-	private boolean theLibrarian() {
-		boolean libRun = true;
-		while(libRun) {
-			println("Type the number associated with the branch you manage.");
-			List<Branch> listOfAllBranches = libraryService.getAllBranches();
-			printList(listOfAllBranches);
-			try {
-				int branchNum = Integer.parseInt(inStream.nextLine());
-				// -1 to keep in the range of the list (because the display will start from 1 not 0)
-				branchNum--;
-				if(branchNum == listOfAllBranches.size()) {
-					println("Back to Main Menu");
-					libRun = false;
-				} else if(branchNum < listOfAllBranches.size() && branchNum >= 0) {
-					librarianOptions(listOfAllBranches.get(branchNum));
-				} else {
-					println("That is not an option");
-				}
-			} catch (NumberFormatException e) {
-				println("That is not a number");
-			}
-		}
-		return true;
-	}
-	
-	private boolean librarianOptions(Branch branch) {
-		boolean libOptions = true;
-		while(libOptions) {
-			println("Choose an option:");
-			println("1)Update the details of the Library");
-			println("2)Add copies of Book to the Branch");
-			println("3)Quit to previous");
-			try {
-				int libOperationOption = Integer.parseInt(inStream.nextLine());
-				switch(libOperationOption) {
-				case 1:
-					updateBranchDetails(branch);
-					break;
-				case 2:
-					addCopiesOfBooks(branch);
-					break;
-				case 3:
-					libOptions = false;
-					break;
-				default:
-					println("That is not an option, please try again");
-					break;
-				}
-				
-			} catch (NumberFormatException e) {
-				println("That is not a number");
-			}
-		}
-		return true;
-	}
-	
-	private boolean addCopiesOfBooks(Branch branch) {
-		boolean addingCopies = true;
-		while(addingCopies) {
-			println("Type the number associated with the book you want to add copies of, to your branch.");
-			List<Book> listOfAllBooks = libraryService.getAllBooks();
-			printList(listOfAllBooks);
-			try {
-				int bookNum = Integer.parseInt(inStream.nextLine());
-				// -1 to keep in the range of the list (because the display will start from 1 not 0)
-				bookNum--;
-				if(bookNum == listOfAllBooks.size()) {
-					println("Back to Librarian Options");
-					addingCopies = false;
-				} else if(bookNum < listOfAllBooks.size() && bookNum >= 0) {
-					addCopiesOfABook(branch, listOfAllBooks.get(bookNum));
-				} else {
-					println("That is not an option");
-				}
-			} catch (NumberFormatException e) {
-				println("That is not a number");
-			}
-		}
-		return true;
-	}
-	
-	private boolean addCopiesOfABook(Branch branch, Book book) {
-		Map<Branch, Map<Book, Integer>> listOfAllCopies = libraryService.getAllCopies();
-		int existingNumOfCopies = 0;
-		if(listOfAllCopies.containsKey(branch)) {
-			Map<Book, Integer> listOfAllCopiesOfABranch = listOfAllCopies.get(branch);
 
-			if(listOfAllCopiesOfABranch.containsKey(book)) {
-				existingNumOfCopies = listOfAllCopiesOfABranch.get(book);
-			}
-		}
-		println("Existing number of copies: " + String.valueOf(existingNumOfCopies));
-		println("Enter new number of copies:");
-		try {
-			int newNoOfCopies = Integer.parseInt(inStream.nextLine());
-			libraryService.setBranchCopies(branch, book, newNoOfCopies);
-			println("Update Successful");
-		} catch (NumberFormatException e) {
-			println("That is not a number");
-		}
-		return true;
-	}
-	
-	private boolean updateBranchDetails(Branch branch) {
-		println("You have chosen to update the Branch with Branch Id: " + branch.getId() +
-	" and Branch Name: " + branch.getName() + ", located at " + branch.getAddress() + ".");
-		println("Enter 'quit' at any prompt to cancel operation.");
-		
-		println("Please enter new branch name or enter N/A for no change:");
-		String newName = inStream.nextLine();
-		if(newName.equals("quit")) {
-			return true;
-		} else if(!newName.equals("N/A")){
-			branch.setName(newName);
-		}
-		
-		println("Please enter new branch address or enter N/A for no change:");
-		String newAddress = inStream.nextLine();
-		if(newAddress.equals("quit")) {
-			return true;
-		} else if(!newAddress.equals("N/A")){
-			branch.setName(newAddress);
-		}
-		
-		libraryService.updateBranch(branch);
-		println("Successfully Updated");
-		return true;
-	}
-	
 	private <T> void printList(List<T> list) {
 		list.stream().forEach(l -> {
 			try {
@@ -933,38 +576,4 @@ public class MainMenu {
 		}
 	}
 
-	public static void main(String[] args) {
-		final Logger LOGGER = Logger.getLogger(MainMenu.class.getName());
-		Connection conn = null;
-		List<String> authentication = new ArrayList<>();
-		try {
-			BufferedReader br = new BufferedReader(new FileReader(".config"));
-			String nextLine = "";
-			while((nextLine = br.readLine()) != null) {
-				authentication.add(nextLine);
-			}
-			br.close();
-		} catch (IOException e) {
-			LOGGER.log(Level.SEVERE, "I/O Error cannot read .config file");
-		}
-
-		try {
-			conn = (Connection) DriverManager.getConnection(
-				"jdbc:mysql://localhost:3306/library?useSSL=false&serverTimezone=UTC",
-				authentication.get(0), authentication.get(1));
-		} catch (SQLException ex) {
-		    // handle any errors
-		    System.out.println("SQLException: " + ex.getMessage());
-		    System.out.println("SQLState: " + ex.getSQLState());
-		    System.out.println("VendorError: " + ex.getErrorCode());
-		}
-		
-		
-		try(InputStreamReader in = new InputStreamReader(System.in)) {
-			final MainMenu menu = new MainMenu(conn, in, System.out);
-			menu.start();
-		} catch (final IOException except) {
-			LOGGER.log(Level.SEVERE, "I/O error dealing with System input", except);
-		}
-	}
 }
