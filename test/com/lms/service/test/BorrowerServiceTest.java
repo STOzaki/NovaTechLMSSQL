@@ -73,6 +73,10 @@ public class BorrowerServiceTest {
 		conn = (Connection) DriverManager.getConnection(
 				"jdbc:mysql://localhost:3306/libraryTest?useSSL=false&serverTimezone=UTC",
 				authentication.get(0), authentication.get(1));
+		
+		// simulate the same as the menu
+		conn.setAutoCommit(false);
+		
 		borrowerDaoImpl = new BorrowerDaoImpl(conn);
 		loanDaoImpl = new BookLoansDaoImpl(conn);
 		copiesDaoImpl = new CopiesDaoImpl(conn);
