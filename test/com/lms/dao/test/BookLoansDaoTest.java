@@ -5,17 +5,13 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.AfterAll;
@@ -35,10 +31,12 @@ import com.lms.model.Borrower;
 import com.lms.model.Branch;
 import com.lms.model.Loan;
 
+import com.lms.service.util.ConnectingToDataBase;
+
 public class BookLoansDaoTest {
 
 	private static Connection conn = null;
-	private static BufferedReader br;
+
 	private static String table = "tbl_book_loans";
 	private static String tableBookId = "bookId";
 
@@ -67,14 +65,7 @@ public class BookLoansDaoTest {
 	
 	@BeforeAll
 	public static void initAll() throws IOException, SQLException {
-		br = new BufferedReader(new FileReader(".config"));
-		List<String> authentication = new ArrayList<>();
-		String nextLine = "";
-		while((nextLine = br.readLine()) != null) {
-			authentication.add(nextLine);
-		}
-		conn = (Connection) DriverManager.getConnection(
-				"jdbc:mysql://localhost:3306/libraryTest?useSSL=false&serverTimezone=UTC", authentication.get(0), authentication.get(1));
+		conn = ConnectingToDataBase.connectingToDataBase("test");
 		bookDaoImpl = new BookDaoImpl(conn);
 		branchDaoImpl = new LibraryBranchDaoImpl(conn);
 		borrowerDaoImpl = new BorrowerDaoImpl(conn);
@@ -83,7 +74,7 @@ public class BookLoansDaoTest {
 	
 	@AfterAll
 	public static void cleanUp() throws IOException {
-		br.close();
+		ConnectingToDataBase.closingConnection(conn);
 	}
 	
 	@BeforeEach

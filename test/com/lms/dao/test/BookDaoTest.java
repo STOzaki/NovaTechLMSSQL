@@ -5,15 +5,11 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -31,6 +27,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 
+import com.lms.service.util.ConnectingToDataBase;
+
 public class BookDaoTest {
 	private String title = "The Book Title";
 	
@@ -41,34 +39,27 @@ public class BookDaoTest {
 	private String authorName = "Author Name";
 	
 	private static Connection conn = null;
+
 	private static BookDaoImpl bookDaoImpl;
 	private static PublisherDaoImpl publisherDaoImpl;
 	private static AuthorDaoImpl authorDaoImpl;
 	private Book testBook;
 	private Author testAuthor;
 	private Publisher testPublisher;
-	private static BufferedReader br;
 	private static String table = "tbl_book";
 	private static String tableId = "bookId";
 	
 	@BeforeAll
 	public static void initAll() throws IOException, SQLException {
-		br = new BufferedReader(new FileReader(".config"));
-		List<String> authentication = new ArrayList<>();
-		String nextLine = "";
-		while((nextLine = br.readLine()) != null) {
-			authentication.add(nextLine);
-		}
-		conn = (Connection) DriverManager.getConnection(
-				"jdbc:mysql://localhost:3306/libraryTest?useSSL=false&serverTimezone=UTC", authentication.get(0), authentication.get(1));
+		conn = ConnectingToDataBase.connectingToDataBase("test");
 		bookDaoImpl = new BookDaoImpl(conn);
 		publisherDaoImpl = new PublisherDaoImpl(conn);
 		authorDaoImpl = new AuthorDaoImpl(conn);
 	}
 	
 	@AfterAll
-	public static void cleanUp() throws IOException {
-		br.close();
+	public static void cleanUp() throws IOException, SQLException {
+		ConnectingToDataBase.closingConnection(conn);
 	}
 	
 	@BeforeEach
