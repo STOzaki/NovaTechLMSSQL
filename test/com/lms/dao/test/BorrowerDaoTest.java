@@ -5,15 +5,11 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -27,6 +23,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 
+import com.lms.service.util.ConnectingToDataBase;
+
 public class BorrowerDaoTest {
 	private String borrowerName = "Jack Blaze";
 	private String borrowerAddress = "601 New Jersey Ave, Washington, DC 20001";
@@ -36,26 +34,18 @@ public class BorrowerDaoTest {
 	private static BorrowerDaoImpl borrowerDaoImpl;
 	
 	private static Connection conn = null;
-	private static BufferedReader br;
 	private static String table = "tbl_borrower";
 	private static String tableId = "cardNo";
 	
 	@BeforeAll
 	public static void initAll() throws IOException, SQLException {
-		br = new BufferedReader(new FileReader(".config"));
-		List<String> authentication = new ArrayList<>();
-		String nextLine = "";
-		while((nextLine = br.readLine()) != null) {
-			authentication.add(nextLine);
-		}
-		conn = (Connection) DriverManager.getConnection(
-				"jdbc:mysql://localhost:3306/libraryTest?useSSL=false&serverTimezone=UTC", authentication.get(0), authentication.get(1));
+		conn = ConnectingToDataBase.connectingToDataBase("test");
 		borrowerDaoImpl = new BorrowerDaoImpl(conn);
 	}
 	
 	@AfterAll
 	public static void cleanUp() throws IOException {
-		br.close();
+		ConnectingToDataBase.closingConnection(conn);
 	}
 	
 	@BeforeEach
