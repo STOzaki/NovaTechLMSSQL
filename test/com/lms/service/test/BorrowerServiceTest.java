@@ -22,6 +22,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import com.lms.customExceptions.DeleteException;
 import com.lms.dao.BookDaoImpl;
 import com.lms.dao.BookLoansDaoImpl;
 import com.lms.dao.BorrowerDaoImpl;
@@ -112,7 +113,7 @@ public class BorrowerServiceTest {
 
 	@DisplayName("Can return a book because not over the due date")
 	@Test
-	public void returnBookTest() {
+	public void returnBookTest() throws DeleteException {
 		// returning 1 week before it is due
 		boolean result = borrowerService.returnBook(testBorrower, testBook, testBranch, LocalDate.now().plusWeeks(1));
 		assertTrue(result);
@@ -120,7 +121,7 @@ public class BorrowerServiceTest {
 	
 	@DisplayName("Cannot return book if it cannot find that loan")
 	@Test
-	public void returnNullBookTest() {
+	public void returnNullBookTest() throws DeleteException {
 		Book fakeBook = new Book(Integer.MAX_VALUE, "Some Title", null, null);
 		boolean result = borrowerService.returnBook(testBorrower, fakeBook, testBranch, LocalDate.now().plusWeeks(1));
 		assertFalse(result);
@@ -128,7 +129,7 @@ public class BorrowerServiceTest {
 	
 	@DisplayName("Cannot return book if due date has already passed")
 	@Test
-	public void returnBookWithDueDatePassedTest() {
+	public void returnBookWithDueDatePassedTest() throws DeleteException {
 		// 1 week after book is due
 		boolean result = borrowerService.returnBook(testBorrower, testBook, testBranch, LocalDate.now().plusWeeks(3));
 		assertFalse(result);
