@@ -1,6 +1,5 @@
 package com.lms.service;
 
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -55,7 +54,7 @@ public interface AdministratorService extends Service {
 	 * Get a list (order should not be relied on) of all the books in the database.
 	 * @return all the books in the database.
 	 */
-	List<Book> getAllBooks() throws SQLException;
+	List<Book> getAllBooks() throws TransactionException;
 
 	/**
 	 * Create an author object and add the author to the database.
@@ -80,7 +79,7 @@ public interface AdministratorService extends Service {
 	 * Get a list (order should not be relied on) of all the authors in the database.
 	 * @return all the authors in the database.
 	 */
-	List<Author> getAllAuthors() throws SQLException;
+	List<Author> getAllAuthors() throws TransactionException;
 
 	/**
 	 * Create a publisher object, with no address or phone number, and add the
@@ -121,7 +120,7 @@ public interface AdministratorService extends Service {
 	 *
 	 * @return all the publishers in the database.
 	 */
-	List<Publisher> getAllPublishers() throws SQLException;
+	List<Publisher> getAllPublishers() throws TransactionException;
 
 	/**
 	 * Create a library branch object and add it to the database.
@@ -172,7 +171,7 @@ public interface AdministratorService extends Service {
 	 *
 	 * @return all the borrowers in the database.
 	 */
-	List<Borrower> getAllBorrowers() throws SQLException;
+	List<Borrower> getAllBorrowers() throws TransactionException;
 
 	/**
 	 * Override the due date for the given borrower's loan of the given book from
@@ -193,5 +192,5 @@ public interface AdministratorService extends Service {
 	 *
 	 * @return all the loans in the database.
 	 */
-	List<Loan> getAllLoans() throws SQLException;
+	List<Loan> getAllLoans() throws TransactionException;
 }

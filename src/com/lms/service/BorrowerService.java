@@ -1,6 +1,5 @@
 package com.lms.service;
 
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -40,7 +39,7 @@ public interface BorrowerService extends Service {
 	 * @return a mapping from books in that library to the number of copies of each
 	 *         that it has.
 	 */
-	Map<Book, Integer> getAllBranchCopies(Branch branch) throws SQLException;
+	Map<Book, Integer> getAllBranchCopies(Branch branch) throws TransactionException;
 
 	/**
 	 * Handle a returned book: if there is an outstanding loan of the given book to
@@ -61,7 +60,7 @@ public interface BorrowerService extends Service {
 	 * @param borrower in question
 	 * @return all branches the borrower owes a book return to.
 	 */
-	List<Branch> getAllBranchesWithLoan(Borrower borrower) throws SQLException;
+	List<Branch> getAllBranchesWithLoan(Borrower borrower) throws TransactionException;
 
 	/**
 	 * Get all book loans the borrower has borrowed from any library branch.
@@ -69,7 +68,7 @@ public interface BorrowerService extends Service {
 	 * @param borrower in question
 	 * @return the list of book loans the borrower has out from any library.
 	 */
-	List<Loan> getAllBorrowedBooks(Borrower borrower) throws SQLException;
+	List<Loan> getAllBorrowedBooks(Borrower borrower) throws TransactionException;
 
 	/**
 	 * Get Borrower with the specified cardNo
@@ -77,6 +76,6 @@ public interface BorrowerService extends Service {
 	 * @param cardNo the borrower's cardNo
 	 * @return Borrower or null if there is no Borrower with that cardNo
 	 */
-	Borrower getBorrower(int cardNo) throws SQLException;
+	Borrower getBorrower(int cardNo) throws TransactionException;
 
 }
