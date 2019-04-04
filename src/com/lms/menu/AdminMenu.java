@@ -10,6 +10,9 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.lms.customExceptions.DeleteException;
+import com.lms.customExceptions.InsertException;
+import com.lms.customExceptions.UpdateException;
 import com.lms.dao.AuthorDaoImpl;
 import com.lms.dao.BookDaoImpl;
 import com.lms.dao.BookLoansDaoImpl;
@@ -111,8 +114,13 @@ public class AdminMenu {
 				println("I am sorry but that is no the right data format (Needs to be like yyyy-mm-dd");
 			}
 		}
-		adminService.overrideDueDateForLoan(loanToOverride.getBook(), loanToOverride.getBorrower(),
-				loanToOverride.getBranch(), newDueDate);
+		try {
+			adminService.overrideDueDateForLoan(loanToOverride.getBook(), loanToOverride.getBorrower(),
+					loanToOverride.getBranch(), newDueDate);
+		} catch (UpdateException e) {
+			LOGGER.log(Level.WARNING, "Failed to override due date");
+			println("We were unable to override due date");
+		}
 		return true;
 	}
 	
@@ -162,7 +170,12 @@ public class AdminMenu {
 		if(deletingBook == null) {
 			return false;
 		}
-		adminService.deleteBook(deletingBook);
+		try {
+			adminService.deleteBook(deletingBook);
+		} catch (DeleteException e) {
+			LOGGER.log(Level.WARNING, "Failed to delete book");
+			println("We could not delete your requested book");
+		}
 		return true;
 	}
 
@@ -174,7 +187,12 @@ public class AdminMenu {
 		if(deletingAuthor == null) {
 			return false;
 		}
-		adminService.deleteAuthor(deletingAuthor);
+		try {
+			adminService.deleteAuthor(deletingAuthor);
+		} catch (DeleteException e) {
+			LOGGER.log(Level.WARNING, "Failed to delete author");
+			println("We could not delete your requested author");
+		}
 		return true;
 	}
 
@@ -186,7 +204,12 @@ public class AdminMenu {
 		if(deletingPublisher == null) {
 			return false;
 		}
-		adminService.deletePublisher(deletingPublisher);
+		try {
+			adminService.deletePublisher(deletingPublisher);
+		} catch (DeleteException e) {
+			LOGGER.log(Level.WARNING, "Failed to delete publisher");
+			println("We could not delete your requested publisher");
+		}
 		return true;
 	}
 
@@ -198,7 +221,12 @@ public class AdminMenu {
 		if(deletingBranch == null) {
 			return false;
 		}
-		adminService.deleteBranch(deletingBranch);
+		try {
+			adminService.deleteBranch(deletingBranch);
+		} catch (DeleteException e) {
+			LOGGER.log(Level.WARNING, "Failed to delete branch");
+			println("We could not delete your requested library branch");
+		}
 		return true;
 	}
 
@@ -210,7 +238,12 @@ public class AdminMenu {
 		if(deletingBorrower == null) {
 			return false;
 		}
-		adminService.deleteBorrower(deletingBorrower);
+		try {
+			adminService.deleteBorrower(deletingBorrower);
+		} catch (DeleteException e) {
+			LOGGER.log(Level.WARNING, "Failed to delete borrower");
+			println("We could not delete your requested borrower");
+		}
 		return true;
 	}
 	
@@ -285,7 +318,12 @@ public class AdminMenu {
 		println("What is the new title?");
 		String choosenTitle = inStream.nextLine();
 		pickedBook.setTitle(choosenTitle);
-		adminService.updateBook(pickedBook);
+		try {
+			adminService.updateBook(pickedBook);
+		} catch (UpdateException e) {
+			LOGGER.log(Level.WARNING, "Failed to update book");
+			println("We could not update your requested book");
+		}
 		return true;
 	}
 	
@@ -303,7 +341,12 @@ public class AdminMenu {
 		String newName = inStream.nextLine();
 		pickedAuthor.setName(newName);
 		
-		adminService.updateAuthor(pickedAuthor);
+		try {
+			adminService.updateAuthor(pickedAuthor);
+		} catch (UpdateException e) {
+			LOGGER.log(Level.WARNING, "Failed to update author");
+			println("We could not update your requested author");
+		}
 		return true;
 	}
 	
@@ -329,7 +372,12 @@ public class AdminMenu {
 		String newPhone = inStream.nextLine();
 		pickedPublisher.setPhone(newPhone);
 		
-		adminService.updatePublisher(pickedPublisher);
+		try {
+			adminService.updatePublisher(pickedPublisher);
+		} catch (UpdateException e) {
+			LOGGER.log(Level.WARNING, "Failed to update publisher");
+			println("We could not update your requested publisher");
+		}
 		
 		return true;
 	}
@@ -352,7 +400,12 @@ public class AdminMenu {
 		String newAddress = inStream.nextLine();
 		pickedbranch.setAddress(newAddress);
 		
-		adminService.updateBranch(pickedbranch);
+		try {
+			adminService.updateBranch(pickedbranch);
+		} catch (UpdateException e) {
+			LOGGER.log(Level.WARNING, "Failed to update branch");
+			println("We could not update your requested library branch");
+		}
 		return true;
 	}
 
@@ -378,7 +431,12 @@ public class AdminMenu {
 		String newPhone = inStream.nextLine();
 		pickedBorrower.setPhone(newPhone);
 		
-		adminService.updateBorrower(pickedBorrower);
+		try {
+			adminService.updateBorrower(pickedBorrower);
+		} catch (UpdateException e) {
+			LOGGER.log(Level.WARNING, "Failed to update borrower");
+			println("We could not update your requested borrower");
+		}
 		
 		return true;
 		
@@ -443,7 +501,14 @@ public class AdminMenu {
 		
 		println("What is the title?");
 		String choosenTitle = inStream.nextLine();
-		Book returntedBook = adminService.createBook(choosenTitle, pickedAuthor, pickedPublisher);
+		Book returntedBook = null;
+		try {
+			returntedBook = adminService.createBook(choosenTitle, pickedAuthor, pickedPublisher);
+		} catch (InsertException e) {
+			LOGGER.log(Level.WARNING, "Failed to create book");
+			println("We could not create your requested book");
+		}
+
 		if(returntedBook != null) {
 			println("Added successfully");
 		} else {
@@ -455,7 +520,14 @@ public class AdminMenu {
 	private boolean addingToAuthor() {
 		println("What is the name of the Author?");
 		String newName = inStream.nextLine();
-		Author newAuthor = adminService.createAuthor(newName);
+		Author newAuthor = null;
+		try {
+			newAuthor = adminService.createAuthor(newName);
+		} catch (InsertException e) {
+			LOGGER.log(Level.WARNING, "Failed to create author");
+			println("We could not create your requested author");
+		}
+
 		if(newAuthor != null) {
 			println("Added successfully");
 		} else {
@@ -471,7 +543,14 @@ public class AdminMenu {
 		String newAddress = inStream.nextLine();
 		println("What is the phone number for the publisher");
 		String newPhone = inStream.nextLine();
-		Publisher newPublisher = adminService.createPublisher(newName, newAddress, newPhone);
+		Publisher newPublisher = null;
+		try {
+			newPublisher = adminService.createPublisher(newName, newAddress, newPhone);
+		} catch (InsertException e) {
+			LOGGER.log(Level.WARNING, "Failed to create publisher");
+			println("We could not create your requested publisher");
+		}
+
 		if(newPublisher != null) {
 			println("Added successfully");
 		} else {
@@ -485,7 +564,14 @@ public class AdminMenu {
 		String newName = inStream.nextLine();
 		println("What is the address of the library branch?");
 		String newAddress = inStream.nextLine();
-		Branch newBranch = adminService.createBranch(newName, newAddress);
+		Branch newBranch = null;
+		try {
+			newBranch = adminService.createBranch(newName, newAddress);
+		} catch (InsertException e) {
+			LOGGER.log(Level.WARNING, "Failed to create branch");
+			println("We could not create your requested library branch");
+		}
+
 		if(newBranch != null) {
 			println("Added successfully");
 		} else {
@@ -501,7 +587,14 @@ public class AdminMenu {
 		String newAddress = inStream.nextLine();
 		println("What is the phone number for the borrower");
 		String newPhone = inStream.nextLine();
-		Borrower newBorrower = adminService.createBorrower(newName, newAddress, newPhone);
+		Borrower newBorrower = null;
+		try {
+			newBorrower = adminService.createBorrower(newName, newAddress, newPhone);
+		} catch (InsertException e) {
+			LOGGER.log(Level.WARNING, "Failed to create borrower");
+			println("We could not create your requested borrower");
+		}
+
 		if(newBorrower != null) {
 			println("Added successfully");
 		} else {

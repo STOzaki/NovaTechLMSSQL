@@ -9,6 +9,8 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.lms.customExceptions.UnknownSQLException;
+import com.lms.customExceptions.UpdateException;
 import com.lms.dao.BookDaoImpl;
 import com.lms.dao.CopiesDaoImpl;
 import com.lms.dao.LibraryBranchDaoImpl;
@@ -141,6 +143,10 @@ public class LibrarianMenu {
 			println("Update Successful");
 		} catch (NumberFormatException e) {
 			println("That is not a number");
+		} catch (UnknownSQLException e) {
+			LOGGER.log(Level.WARNING, "Failed to set branch copies: " + e.getMessage());
+			println("I am sorry but there seems to have been a problem with updating the number of copies in " +
+					branch.getName() + " for " + book.getTitle());
 		}
 		return true;
 	}
@@ -166,7 +172,12 @@ public class LibrarianMenu {
 			branch.setName(newAddress);
 		}
 		
-		libraryService.updateBranch(branch);
+		try {
+			libraryService.updateBranch(branch);
+		} catch (UpdateException e) {
+			LOGGER.log(Level.WARNING, "Failed update branch: " + e);
+			println("Unfortunaly, we were unable to update the branch details for " + branch.getName());
+		}
 		println("Successfully Updated");
 		return true;
 	}
