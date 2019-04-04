@@ -1,6 +1,5 @@
 package com.lms.service;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +32,7 @@ public interface LibrarianService extends Service {
 	 * Get all books in the database.
 	 * @return all books in the database
 	 */
-	List<Book> getAllBooks() throws SQLException;
+	List<Book> getAllBooks() throws TransactionException;
 
 	/**
 	 * Get all counts of copies that branches have, as a mapping from branches to
@@ -44,5 +43,5 @@ public interface LibrarianService extends Service {
 	 *
 	 * @return the collection of all copy counts in the database
 	 */
-	Map<Branch, Map<Book, Integer>> getAllCopies() throws SQLException;
+	Map<Branch, Map<Book, Integer>> getAllCopies() throws TransactionException;
 }
