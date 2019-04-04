@@ -3,16 +3,11 @@ package com.lms.dao.test;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import org.junit.jupiter.api.AfterAll;
@@ -28,9 +23,11 @@ import com.lms.dao.LibraryBranchDaoImpl;
 import com.lms.model.Book;
 import com.lms.model.Branch;
 
+import com.lms.service.util.ConnectingToDataBase;
+
 public class CopiesDaoTest {
 	private static Connection conn = null;
-	private static BufferedReader br;
+
 	private static String table = "tbl_book_copies";
 	private static String tableBookId = "bookId";
 
@@ -50,14 +47,7 @@ public class CopiesDaoTest {
 
 	@BeforeAll
 	public static void initAll() throws IOException, SQLException {
-		br = new BufferedReader(new FileReader(".config"));
-		List<String> authentication = new ArrayList<>();
-		String nextLine = "";
-		while((nextLine = br.readLine()) != null) {
-			authentication.add(nextLine);
-		}
-		conn = (Connection) DriverManager.getConnection(
-				"jdbc:mysql://localhost:3306/libraryTest?useSSL=false&serverTimezone=UTC", authentication.get(0), authentication.get(1));
+		conn = ConnectingToDataBase.connectingToDataBase("test");
 		bookDaoImpl = new BookDaoImpl(conn);
 		branchDaoImpl = new LibraryBranchDaoImpl(conn);
 		copiesDaoImpl = new CopiesDaoImpl(conn);
@@ -65,7 +55,7 @@ public class CopiesDaoTest {
 	
 	@AfterAll
 	public static void cleanUp() throws IOException {
-		br.close();
+		ConnectingToDataBase.closingConnection(conn);
 	}
 	
 	@BeforeEach

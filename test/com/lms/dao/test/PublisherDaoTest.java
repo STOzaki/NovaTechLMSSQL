@@ -5,15 +5,11 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -26,34 +22,29 @@ import org.junit.jupiter.api.DisplayName;
 import com.lms.dao.PublisherDaoImpl;
 import com.lms.model.Publisher;
 
+import com.lms.service.util.ConnectingToDataBase;
 
 public class PublisherDaoTest {
 	private String publisherName = "The Publisher";
 	private String publisherAddress = "601 New Jersey Ave, Washington, DC 20001";
 	private String publisherPhone = "1234567890";
+
 	private static Connection conn = null;
+
 	private static PublisherDaoImpl publisherDaoImpl;
 	private Publisher testPublisher;
-	private static BufferedReader br;
 	private static String table = "tbl_publisher";
 	private static String tableId = "publisherId";
 	
 	@BeforeAll
 	public static void initAll() throws IOException, SQLException {
-		br = new BufferedReader(new FileReader(".config"));
-		List<String> authentication = new ArrayList<>();
-		String nextLine = "";
-		while((nextLine = br.readLine()) != null) {
-			authentication.add(nextLine);
-		}
-		conn = (Connection) DriverManager.getConnection(
-				"jdbc:mysql://localhost:3306/libraryTest?useSSL=false&serverTimezone=UTC", authentication.get(0), authentication.get(1));
+		conn = ConnectingToDataBase.connectingToDataBase("test");
 		publisherDaoImpl = new PublisherDaoImpl(conn);
 	}
 	
 	@AfterAll
 	public static void cleanUp() throws IOException {
-		br.close();
+		ConnectingToDataBase.closingConnection(conn);
 	}
 	
 	@BeforeEach
