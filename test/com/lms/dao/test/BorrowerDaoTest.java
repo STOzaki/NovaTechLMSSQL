@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import com.lms.customExceptions.CriticalSQLException;
 import com.lms.dao.BorrowerDaoImpl;
 import com.lms.model.Borrower;
 
@@ -38,13 +39,13 @@ public class BorrowerDaoTest {
 	private static String tableId = "cardNo";
 	
 	@BeforeAll
-	public static void initAll() throws IOException, SQLException {
+	public static void initAll() throws IOException, SQLException, CriticalSQLException {
 		conn = ConnectingToDataBase.connectingToDataBase("test");
 		borrowerDaoImpl = new BorrowerDaoImpl(conn);
 	}
 	
 	@AfterAll
-	public static void cleanUp() throws IOException {
+	public static void cleanUp() throws IOException, CriticalSQLException {
 		ConnectingToDataBase.closingConnection(conn);
 	}
 	

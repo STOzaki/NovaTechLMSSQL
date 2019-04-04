@@ -19,6 +19,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 
+import com.lms.customExceptions.CriticalSQLException;
 import com.lms.dao.PublisherDaoImpl;
 import com.lms.model.Publisher;
 
@@ -37,13 +38,13 @@ public class PublisherDaoTest {
 	private static String tableId = "publisherId";
 	
 	@BeforeAll
-	public static void initAll() throws IOException, SQLException {
+	public static void initAll() throws IOException, SQLException, CriticalSQLException {
 		conn = ConnectingToDataBase.connectingToDataBase("test");
 		publisherDaoImpl = new PublisherDaoImpl(conn);
 	}
 	
 	@AfterAll
-	public static void cleanUp() throws IOException {
+	public static void cleanUp() throws IOException, CriticalSQLException {
 		ConnectingToDataBase.closingConnection(conn);
 	}
 	
