@@ -19,6 +19,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import com.lms.customExceptions.CriticalSQLException;
 import com.lms.dao.AuthorDaoImpl;
 import com.lms.model.Author;
 
@@ -35,13 +36,13 @@ public class AuthorDaoTest {
 	private static String tableId = "authorId";
 	
 	@BeforeAll
-	public static void initAll() throws IOException, SQLException {
+	public static void initAll() throws IOException, SQLException, CriticalSQLException {
 		conn = ConnectingToDataBase.connectingToDataBase("test");
 		authorDaoImpl = new AuthorDaoImpl(conn);
 	}
 	
 	@AfterAll
-	public static void cleanUp() throws IOException {
+	public static void cleanUp() throws IOException, CriticalSQLException {
 		ConnectingToDataBase.closingConnection(conn);
 	}
 	

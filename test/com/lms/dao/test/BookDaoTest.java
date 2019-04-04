@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import com.lms.customExceptions.CriticalSQLException;
 import com.lms.dao.AuthorDaoImpl;
 import com.lms.dao.BookDaoImpl;
 import com.lms.dao.PublisherDaoImpl;
@@ -50,7 +51,7 @@ public class BookDaoTest {
 	private static String tableId = "bookId";
 	
 	@BeforeAll
-	public static void initAll() throws IOException, SQLException {
+	public static void initAll() throws IOException, SQLException, CriticalSQLException {
 		conn = ConnectingToDataBase.connectingToDataBase("test");
 		bookDaoImpl = new BookDaoImpl(conn);
 		publisherDaoImpl = new PublisherDaoImpl(conn);
@@ -58,7 +59,7 @@ public class BookDaoTest {
 	}
 	
 	@AfterAll
-	public static void cleanUp() throws IOException, SQLException {
+	public static void cleanUp() throws IOException, SQLException, CriticalSQLException {
 		ConnectingToDataBase.closingConnection(conn);
 	}
 	

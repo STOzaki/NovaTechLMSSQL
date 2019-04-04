@@ -17,6 +17,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import com.lms.customExceptions.CriticalSQLException;
 import com.lms.dao.BookDaoImpl;
 import com.lms.dao.CopiesDaoImpl;
 import com.lms.dao.LibraryBranchDaoImpl;
@@ -46,7 +47,7 @@ public class CopiesDaoTest {
 	private Branch testBranch;
 
 	@BeforeAll
-	public static void initAll() throws IOException, SQLException {
+	public static void initAll() throws IOException, SQLException, CriticalSQLException {
 		conn = ConnectingToDataBase.connectingToDataBase("test");
 		bookDaoImpl = new BookDaoImpl(conn);
 		branchDaoImpl = new LibraryBranchDaoImpl(conn);
@@ -54,7 +55,7 @@ public class CopiesDaoTest {
 	}
 	
 	@AfterAll
-	public static void cleanUp() throws IOException {
+	public static void cleanUp() throws IOException, CriticalSQLException {
 		ConnectingToDataBase.closingConnection(conn);
 	}
 	
