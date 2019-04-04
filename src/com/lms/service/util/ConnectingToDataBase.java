@@ -38,7 +38,7 @@ public final class ConnectingToDataBase {
 			} else {
 				url = prop.getProperty("url");
 			}
-			
+
 
 		} catch (IOException e) {
 			LOGGER.log(Level.SEVERE, "I/O Error cannot read .property file: " + e.getMessage());
