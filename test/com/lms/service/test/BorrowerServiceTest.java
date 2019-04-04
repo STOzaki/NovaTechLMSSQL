@@ -86,8 +86,9 @@ public class BorrowerServiceTest {
 	}
 	
 	@AfterAll
-	public static void cleanUp() throws IOException {
+	public static void cleanUp() throws IOException, SQLException {
 		br.close();
+		conn.close();
 	}
 	
 	@BeforeEach
