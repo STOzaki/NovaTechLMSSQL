@@ -1,13 +1,16 @@
 package com.lms.service;
 
 import java.sql.SQLException;
-import java.time.LocalDate;
+import java.sql.Connection;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.sql.Connection;
 
+import java.time.LocalDate;
+
+import com.lms.customExceptions.CriticalSQLException;
 import com.lms.customExceptions.DeleteException;
 import com.lms.customExceptions.InsertException;
 import com.lms.customExceptions.UpdateException;
@@ -24,6 +27,8 @@ import com.lms.model.Branch;
 import com.lms.model.Loan;
 import com.lms.model.Publisher;
 
+import com.lms.service.util.ConnectingToDataBase;
+
 public class AdministratorServiceImpl {
 	private BookDaoImpl bookDaoImpl;
 	private AuthorDaoImpl authorDaoImpl;
@@ -34,16 +39,14 @@ public class AdministratorServiceImpl {
 	private Connection conn;
 	private static final Logger LOGGER = Logger.getLogger(AdministratorServiceImpl.class.getName());
 
-	public AdministratorServiceImpl(BookDaoImpl bookDaoImpl, AuthorDaoImpl authorDaoImpl,
-			PublisherDaoImpl publisherDaoImpl, LibraryBranchDaoImpl branchDaoImpl,
-			BorrowerDaoImpl borrowerDaoImpl, BookLoansDaoImpl loanDaoImpl, Connection conn) {
-		this.bookDaoImpl = bookDaoImpl;
-		this.authorDaoImpl = authorDaoImpl;
-		this.publisherDaoImpl = publisherDaoImpl;
-		this.branchDaoImpl = branchDaoImpl;
-		this.borrowerDaoImpl = borrowerDaoImpl;
-		this.loanDaoImpl = loanDaoImpl;
-		this.conn = conn;
+	public AdministratorServiceImpl(String env) throws CriticalSQLException {
+		this.conn = ConnectingToDataBase.connectingToDataBase(env);
+		this.bookDaoImpl = new BookDaoImpl(conn);
+		this.authorDaoImpl = new AuthorDaoImpl(conn);
+		this.publisherDaoImpl = new PublisherDaoImpl(conn);
+		this.branchDaoImpl = new LibraryBranchDaoImpl(conn);
+		this.borrowerDaoImpl = new BorrowerDaoImpl(conn);
+		this.loanDaoImpl = new BookLoansDaoImpl(conn);
 	}
 
 	public Book createBook(String title, Author author, Publisher publisher) throws InsertException {

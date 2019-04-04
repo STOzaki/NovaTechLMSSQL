@@ -3,6 +3,7 @@ package com.lms.service;
 import java.sql.SQLException;
 import java.sql.Connection;
 
+import com.lms.customExceptions.CriticalSQLException;
 import com.lms.customExceptions.UnknownSQLException;
 import com.lms.customExceptions.UpdateException;
 import com.lms.dao.BookDaoImpl;
@@ -19,6 +20,8 @@ import java.util.logging.Logger;
 import com.lms.model.Book;
 import com.lms.model.Branch;
 
+import com.lms.service.util.ConnectingToDataBase;
+
 public class LibrarianServiceImpl implements LibrarianService {
 	private LibraryBranchDaoImpl branchDaoImpl;
 	private BookDaoImpl bookDaoImpl;
@@ -26,12 +29,11 @@ public class LibrarianServiceImpl implements LibrarianService {
 	private Connection conn;
 	private static final Logger LOGGER = Logger.getLogger(LibrarianServiceImpl.class.getName());
 
-	public LibrarianServiceImpl(LibraryBranchDaoImpl branchDaoImpl, BookDaoImpl bookDaoImpl,
-			CopiesDaoImpl copiesDaoImpl, Connection conn) {
-		this.branchDaoImpl = branchDaoImpl;
-		this.bookDaoImpl = bookDaoImpl;
-		this.copiesDaoImpl = copiesDaoImpl;
-		this.conn = conn;
+	public LibrarianServiceImpl(String env) throws CriticalSQLException {
+		this.conn = ConnectingToDataBase.connectingToDataBase(env);
+		this.branchDaoImpl = new LibraryBranchDaoImpl(conn);
+		this.bookDaoImpl = new BookDaoImpl(conn);
+		this.copiesDaoImpl = new CopiesDaoImpl(conn);
 	}
 
 	public void updateBranch(Branch branch) throws UpdateException {
