@@ -22,6 +22,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import com.lms.customExceptions.CriticalSQLException;
 import com.lms.customExceptions.UpdateException;
 import com.lms.dao.AuthorDaoImpl;
 import com.lms.dao.BookDaoImpl;
@@ -73,6 +74,8 @@ public class AdministratorServiceTest {
 		while((nextLine = br.readLine()) != null) {
 			authentication.add(nextLine);
 		}
+		br.close();
+
 		conn = (Connection) DriverManager.getConnection(
 				"jdbc:mysql://localhost:3306/libraryTest?useSSL=false&serverTimezone=UTC",
 				authentication.get(0), authentication.get(1));
@@ -90,19 +93,17 @@ public class AdministratorServiceTest {
 	
 	@AfterAll
 	public static void cleanUp() throws IOException, SQLException {
-		br.close();
 		conn.close();
 	}
 	
 	@BeforeEach
-	public void init() throws SQLException {
+	public void init() throws SQLException, CriticalSQLException {
 		testBorrower = borrowerDaoImpl.create(borrowerName, borrowerAddress, borrowerPhone);
 		testBook = bookDaoImpl.create(title, null, null);
 		testBranch = branchDaoImpl.create(branchName, branchAddress);
 		// due date is two weeks from now
 		testLoan = loanDaoImpl.create(testBook, testBorrower, testBranch, LocalDateTime.now(), officialDueDate);
-		adminService = new AdministratorServiceImpl(bookDaoImpl, authorDaoImpl, publisherDaoImpl,
-				branchDaoImpl, borrowerDaoImpl, loanDaoImpl, conn);
+		adminService = new AdministratorServiceImpl("test");
 	}
 	
 	@AfterEach
