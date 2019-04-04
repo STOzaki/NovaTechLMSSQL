@@ -2,9 +2,11 @@ package com.lms.service;
 
 import java.sql.SQLException;
 import java.sql.Connection;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import com.lms.customExceptions.CriticalSQLException;
 import com.lms.customExceptions.DeleteException;
 import com.lms.customExceptions.InsertException;
 import com.lms.dao.BookLoansDaoImpl;
@@ -24,6 +26,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import com.lms.service.util.ConnectingToDataBase;
+
 public class BorrowerServiceImpl {
 	private BorrowerDaoImpl borrowerDaoImpl;
 	private BookLoansDaoImpl loanDaoImpl;
@@ -32,13 +36,12 @@ public class BorrowerServiceImpl {
 	private Connection conn;
 	private static final Logger LOGGER = Logger.getLogger(BorrowerDaoImpl.class.getName());
 
-	public BorrowerServiceImpl(BorrowerDaoImpl borrowerDaoImpl, BookLoansDaoImpl loanDaoImpl,
-			CopiesDaoImpl copiesDaoImpl, LibraryBranchDaoImpl branchDaoImpl, Connection conn) {
-		this.borrowerDaoImpl = borrowerDaoImpl;
-		this.loanDaoImpl = loanDaoImpl;
-		this.copiesDaoImpl = copiesDaoImpl;
-		this.branchDaoImpl = branchDaoImpl;
-		this.conn = conn;
+	public BorrowerServiceImpl(String env) throws CriticalSQLException {
+		this.conn = ConnectingToDataBase.connectingToDataBase(env);
+		this.borrowerDaoImpl = new BorrowerDaoImpl(conn);
+		this.loanDaoImpl = new BookLoansDaoImpl(conn);
+		this.copiesDaoImpl = new CopiesDaoImpl(conn);
+		this.branchDaoImpl = new LibraryBranchDaoImpl(conn);
 	}
 
 	public Loan borrowBook(Borrower borrower, Book book, Branch branch, LocalDateTime dateOut, LocalDate dueDate) throws InsertException {

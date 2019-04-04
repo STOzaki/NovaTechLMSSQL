@@ -10,12 +10,14 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.lms.customExceptions.CriticalSQLException;
+
 import java.util.Properties;
 
 public final class ConnectingToDataBase {
 	final static Logger LOGGER = Logger.getLogger(ConnectingToDataBase.class.getName());
 
-	public static Connection connectingToDataBase(String env) throws SQLException {
+	public static Connection connectingToDataBase(String env) throws CriticalSQLException {
 		Connection conn = null;
 		String user = "";
 		String password = "";
@@ -40,6 +42,7 @@ public final class ConnectingToDataBase {
 
 		} catch (IOException e) {
 			LOGGER.log(Level.SEVERE, "I/O Error cannot read .property file: " + e.getMessage());
+			throw new CriticalSQLException("I/O Error cannot read .property file", e);
 		}
 		
 		try {
@@ -50,15 +53,17 @@ public final class ConnectingToDataBase {
 		    // handle any errors
 			LOGGER.log(Level.WARNING, "SQLException: " + ex.getMessage() + " WITH SQLState: " +
 					ex.getSQLState() + " WITH VendorError: " + ex.getErrorCode());
-			throw new SQLException();
+			throw new CriticalSQLException("Unable to connection to the database", ex);
 		}
 	}
 	
 	public static void closingConnection(Connection conn) {
-		try {
-			conn.close();
-		} catch (SQLException e) {
-			LOGGER.log(Level.WARNING, "WARNING: Unable to close connection to database");
+		if(conn != null) {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				LOGGER.log(Level.WARNING, "WARNING: Unable to close connection to database");
+			}
 		}
 	}
 }
