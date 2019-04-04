@@ -13,6 +13,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import com.lms.customExceptions.DeleteException;
+import com.lms.customExceptions.InsertException;
 import com.lms.dao.BookLoansDaoImpl;
 import com.lms.dao.BorrowerDaoImpl;
 import com.lms.dao.CopiesDaoImpl;
@@ -161,6 +163,9 @@ public class BorrowerMenu {
 				}
 			} catch (NumberFormatException e) {
 				println("That is not a number");
+			} catch (DeleteException e) {
+				LOGGER.log(Level.WARNING, "Failed to return a book");
+				println("Unfortunatly, we were unable to return your book at this time.");
 			}
 		}
 		return true;
@@ -228,7 +233,12 @@ public class BorrowerMenu {
 			println("I am sorry but you have already borrowed that book: " + book.getTitle() + " from " + 
 					branch.getName() + " on " + matchingListOfLoans.get(0).getDateOut());
 		} else if(matchingListOfLoans.size() == 0) {
-			borrowerService.borrowBook(borrower, book, branch, LocalDateTime.now(), LocalDate.now().plusWeeks(1));
+			try {
+				borrowerService.borrowBook(borrower, book, branch, LocalDateTime.now(), LocalDate.now().plusWeeks(1));
+			} catch (InsertException e) {
+				LOGGER.log(Level.WARNING, "Failed to borrower a book");
+				println("We were unable to borrower the requested book");
+			}
 		}
 		return true;
 	}
