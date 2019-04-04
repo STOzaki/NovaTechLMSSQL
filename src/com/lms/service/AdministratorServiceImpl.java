@@ -48,6 +48,10 @@ public class AdministratorServiceImpl {
 		this.borrowerDaoImpl = new BorrowerDaoImpl(conn);
 		this.loanDaoImpl = new BookLoansDaoImpl(conn);
 	}
+	
+	public void closeConnection() {
+		ConnectingToDataBase.closingConnection(conn);
+	}
 
 	public Book createBook(String title, Author author, Publisher publisher) throws InsertException {
 		Book book = null;
