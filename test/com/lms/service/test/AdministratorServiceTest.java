@@ -22,6 +22,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import com.lms.customExceptions.UpdateException;
 import com.lms.dao.AuthorDaoImpl;
 import com.lms.dao.BookDaoImpl;
 import com.lms.dao.BookLoansDaoImpl;
@@ -114,7 +115,7 @@ public class AdministratorServiceTest {
 	
 	@DisplayName("Override due date correctly")
 	@Test
-	public void overrideDueDateForLoanTest() throws SQLException {
+	public void overrideDueDateForLoanTest() throws SQLException, UpdateException {
 		boolean success = adminService.overrideDueDateForLoan(testBook, testBorrower, testBranch,
 				officialDueDate.plusWeeks(1));
 		Loan foundLoan = loanDaoImpl.get(testBook, testBorrower, testBranch);
@@ -125,7 +126,7 @@ public class AdministratorServiceTest {
 	
 	@DisplayName("Override due date fails because there is no such loan")
 	@Test
-	public void overrideDueDateForNullLoanTest() throws SQLException {
+	public void overrideDueDateForNullLoanTest() throws SQLException, UpdateException {
 		Book nonExistingBook = new Book(Integer.MAX_VALUE, "Some Title", null, null);
 		boolean success = adminService.overrideDueDateForLoan(nonExistingBook, testBorrower, testBranch,
 				officialDueDate.plusWeeks(1));
