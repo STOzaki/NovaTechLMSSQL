@@ -1,7 +1,6 @@
 package com.lms.menu;
 
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -9,11 +8,9 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.lms.customExceptions.CriticalSQLException;
 import com.lms.customExceptions.UnknownSQLException;
 import com.lms.customExceptions.UpdateException;
-import com.lms.dao.BookDaoImpl;
-import com.lms.dao.CopiesDaoImpl;
-import com.lms.dao.LibraryBranchDaoImpl;
 import com.lms.model.Book;
 import com.lms.model.Branch;
 import com.lms.service.LibrarianServiceImpl;
@@ -26,22 +23,11 @@ public class LibrarianMenu {
 	
 	private static final Logger LOGGER = Logger.getLogger(LibrarianMenu.class.getName());
 	
-	public LibrarianMenu(Connection conn, Scanner inStream, Appendable outStream) {
+	public LibrarianMenu(Scanner inStream, Appendable outStream) throws CriticalSQLException {
 		this.inStream = inStream;
 		this.outStream = outStream;
-		
-		// turn off auto commit
-        try {
-			conn.setAutoCommit(false);
-		} catch (SQLException e) {
-			LOGGER.log(Level.WARNING, "failed to set auto commit with error message: " + e.getMessage() +
-					" for class " + e.getClass());
-			println("Warning: we have a problem with setting up our connection to the database,");
-			println("so you may experience so problems. (Thank you)");
-		}
 
-		libraryService = new LibrarianServiceImpl(new LibraryBranchDaoImpl(conn), new BookDaoImpl(conn),
-				new CopiesDaoImpl(conn), conn);
+		libraryService = new LibrarianServiceImpl("production");
 	}
 	
 	public boolean start() {
