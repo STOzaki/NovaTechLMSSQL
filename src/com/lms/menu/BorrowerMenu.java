@@ -172,6 +172,7 @@ public class BorrowerMenu {
 			} catch (DeleteException e) {
 				LOGGER.log(Level.WARNING, "Failed to return a book");
 				println("Unfortunatly, we were unable to return your book at this time.");
+				throw new CriticalSQLException("Failed to return a book", e);
 			} catch (RetrieveException e) {
 				LOGGER.log(Level.WARNING, "Failed to return a book", e);
 				throw new CriticalSQLException("Failed to return a book", e);
