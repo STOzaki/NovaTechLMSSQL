@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Test;
 import com.lms.customExceptions.CriticalSQLException;
 import com.lms.customExceptions.DeleteException;
 import com.lms.customExceptions.InsertException;
+import com.lms.customExceptions.RetrieveException;
 import com.lms.customExceptions.UnknownSQLException;
 import com.lms.model.Book;
 import com.lms.model.Borrower;
@@ -76,7 +77,7 @@ public class BorrowerServiceTest {
 	}
 	
 	@AfterEach
-	public void tearThis() throws SQLException, DeleteException, UnknownSQLException {
+	public void tearThis() throws SQLException, DeleteException, UnknownSQLException, RetrieveException {
 		// WARNING maybe something that doesn't call the method we are trying to test
 		adminService.deleteBorrower(testBorrower);
 		adminService.deleteBook(testBook);
@@ -87,7 +88,7 @@ public class BorrowerServiceTest {
 
 	@DisplayName("Can return a book because not over the due date")
 	@Test
-	public void returnBookTest() throws DeleteException {
+	public void returnBookTest() throws DeleteException, RetrieveException {
 		// returning 1 week before it is due
 		boolean result = borrowerService.returnBook(testBorrower, testBook, testBranch, LocalDate.now().plusWeeks(1));
 		assertTrue(result);
@@ -95,7 +96,7 @@ public class BorrowerServiceTest {
 	
 	@DisplayName("Cannot return book if it cannot find that loan")
 	@Test
-	public void returnNullBookTest() throws DeleteException {
+	public void returnNullBookTest() throws DeleteException, RetrieveException {
 		Book fakeBook = new Book(Integer.MAX_VALUE, "Some Title", null, null);
 		boolean result = borrowerService.returnBook(testBorrower, fakeBook, testBranch, LocalDate.now().plusWeeks(1));
 		assertFalse(result);
@@ -103,21 +104,21 @@ public class BorrowerServiceTest {
 	
 	@DisplayName("Cannot return book if due date has already passed")
 	@Test
-	public void returnBookWithDueDatePassedTest() throws DeleteException {
+	public void returnBookWithDueDatePassedTest() throws DeleteException, RetrieveException {
 		// 1 week after book is due
 		boolean result = borrowerService.returnBook(testBorrower, testBook, testBranch, LocalDate.now().plusWeeks(3));
 		assertFalse(result);
 	}
 	
 	@Test
-	public void getAllBranchesWithLoanTest() {
+	public void getAllBranchesWithLoanTest() throws RetrieveException {
 		List<Branch> listOfBranchesWithLoans = borrowerService.getAllBranchesWithLoan(testBorrower);
 		assertTrue(listOfBranchesWithLoans.contains(testBranch));
 		assertEquals(1, listOfBranchesWithLoans.size());
 	}
 	
 	@Test
-	public void getAllBorrowedBooksTest() {
+	public void getAllBorrowedBooksTest() throws RetrieveException {
 		List<Loan> listOfAllBorrowed = borrowerService.getAllBorrowedBooks(testBorrower);
 		assertTrue(listOfAllBorrowed.contains(testLoan));
 		assertEquals(1, listOfAllBorrowed.size());
