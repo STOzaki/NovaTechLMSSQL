@@ -266,6 +266,7 @@ public class BorrowerMenu {
 			} catch (InsertException e) {
 				LOGGER.log(Level.WARNING, "Failed to borrower a book");
 				println("We were unable to borrower the requested book");
+				throw new CriticalSQLException("Failed to borrow a book", e);
 			}
 		}
 		return true;
