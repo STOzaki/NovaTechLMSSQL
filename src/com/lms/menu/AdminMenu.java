@@ -179,6 +179,7 @@ public class AdminMenu {
 		} catch (DeleteException e) {
 			LOGGER.log(Level.WARNING, "Failed to delete book");
 			println("We could not delete your requested book");
+			throw new CriticalSQLException("Failed to delete book", e);
 		}
 		return true;
 	}
@@ -202,6 +203,7 @@ public class AdminMenu {
 		} catch (DeleteException e) {
 			LOGGER.log(Level.WARNING, "Failed to delete author");
 			println("We could not delete your requested author");
+			throw new CriticalSQLException("Failed to delete author", e);
 		}
 		return true;
 	}
@@ -225,6 +227,7 @@ public class AdminMenu {
 		} catch (DeleteException e) {
 			LOGGER.log(Level.WARNING, "Failed to delete publisher");
 			println("We could not delete your requested publisher");
+			throw new CriticalSQLException("Failed to delete publisher", e);
 		}
 		return true;
 	}
@@ -248,6 +251,7 @@ public class AdminMenu {
 		} catch (DeleteException e) {
 			LOGGER.log(Level.WARNING, "Failed to delete branch");
 			println("We could not delete your requested library branch");
+			throw new CriticalSQLException("Failed to delete branch", e);
 		}
 		return true;
 	}
@@ -271,6 +275,7 @@ public class AdminMenu {
 		} catch (DeleteException e) {
 			LOGGER.log(Level.WARNING, "Failed to delete borrower");
 			println("We could not delete your requested borrower");
+			throw new CriticalSQLException("Failed to delete borrower", e);
 		}
 		return true;
 	}
