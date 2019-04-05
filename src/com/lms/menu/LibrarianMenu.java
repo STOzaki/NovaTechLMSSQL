@@ -162,7 +162,7 @@ public class LibrarianMenu {
 		return true;
 	}
 	
-	private boolean updateBranchDetails(Branch branch) {
+	private boolean updateBranchDetails(Branch branch) throws CriticalSQLException {
 		println("You have chosen to update the Branch with Branch Id: " + branch.getId() +
 	" and Branch Name: " + branch.getName() + ", located at " + branch.getAddress() + ".");
 		println("Enter 'quit' at any prompt to cancel operation.");
@@ -188,6 +188,7 @@ public class LibrarianMenu {
 		} catch (UpdateException e) {
 			LOGGER.log(Level.WARNING, "Failed update branch: " + e);
 			println("Unfortunaly, we were unable to update the branch details for " + branch.getName());
+			throw new CriticalSQLException("Failed to update branch", e);
 		}
 		println("Successfully Updated");
 		return true;
