@@ -584,6 +584,7 @@ public class AdminMenu {
 		} catch (InsertException e) {
 			LOGGER.log(Level.WARNING, "Failed to create book");
 			println("We could not create your requested book");
+			throw new CriticalSQLException("Failed to create book", e);
 		}
 
 		if(returntedBook != null) {
@@ -594,7 +595,7 @@ public class AdminMenu {
 		return true;
 	}
 	
-	private boolean addingToAuthor() {
+	private boolean addingToAuthor() throws CriticalSQLException {
 		println("What is the name of the Author?");
 		String newName = inStream.nextLine();
 		Author newAuthor = null;
@@ -603,6 +604,7 @@ public class AdminMenu {
 		} catch (InsertException e) {
 			LOGGER.log(Level.WARNING, "Failed to create author");
 			println("We could not create your requested author");
+			throw new CriticalSQLException("Failed to create author", e);
 		}
 
 		if(newAuthor != null) {
@@ -613,7 +615,7 @@ public class AdminMenu {
 		return true;
 	}
 	
-	private boolean addingToPublisher() {
+	private boolean addingToPublisher() throws CriticalSQLException {
 		println("What is the name of the publisher?");
 		String newName = inStream.nextLine();
 		println("What is the address of the publisher?");
@@ -626,6 +628,7 @@ public class AdminMenu {
 		} catch (InsertException e) {
 			LOGGER.log(Level.WARNING, "Failed to create publisher");
 			println("We could not create your requested publisher");
+			throw new CriticalSQLException("Failed to create publisher", e);
 		}
 
 		if(newPublisher != null) {
@@ -636,7 +639,7 @@ public class AdminMenu {
 		return true;
 	}
 
-	private boolean addingToBranch() {
+	private boolean addingToBranch() throws CriticalSQLException {
 		println("What is the name of the library branch?");
 		String newName = inStream.nextLine();
 		println("What is the address of the library branch?");
@@ -647,6 +650,7 @@ public class AdminMenu {
 		} catch (InsertException e) {
 			LOGGER.log(Level.WARNING, "Failed to create branch");
 			println("We could not create your requested library branch");
+			throw new CriticalSQLException("Failed to create branch", e);
 		}
 
 		if(newBranch != null) {
@@ -657,7 +661,7 @@ public class AdminMenu {
 		return true;
 	}
 
-	private boolean addingToBorrower() {
+	private boolean addingToBorrower() throws CriticalSQLException {
 		println("What is the name of the borrower?");
 		String newName = inStream.nextLine();
 		println("What is the address of the borrower?");
@@ -670,6 +674,7 @@ public class AdminMenu {
 		} catch (InsertException e) {
 			LOGGER.log(Level.WARNING, "Failed to create borrower");
 			println("We could not create your requested borrower");
+			throw new CriticalSQLException("Failed to create borrower", e);
 		}
 
 		if(newBorrower != null) {
