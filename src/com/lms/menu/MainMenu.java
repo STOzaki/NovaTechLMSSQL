@@ -31,26 +31,32 @@ public class MainMenu {
 	}
 
 	public void start() {
-		boolean run = true;
-		while(run) {
-			println("What kind of user are you? ((A)dmin, (L)ibrarian, or (B)orrower) or (Q)uit");
-			String userChoice = inStream.nextLine();
-			switch(userChoice) {
-			case "A": case "a": case "Admin":
-				adminMenu.start();
-				break;
-			case "L": case "l": case "Librarian":
-				librarianMenu.start();
-				break;
-			case "B": case "b": case "Borrower":
-				borrowerMenu.start();
-				break;
-			case "Q": case "q": case "Quit":
-				run = false;
-				break;
-			default:
-				println("I am sorry but that is not a user type. Please try again.");
+		try {
+			boolean run = true;
+			while(run) {
+				println("What kind of user are you? ((A)dmin, (L)ibrarian, or (B)orrower) or (Q)uit");
+				String userChoice = inStream.nextLine();
+				switch(userChoice) {
+				case "A": case "a": case "Admin":
+					adminMenu.start();
+					break;
+				case "L": case "l": case "Librarian":
+					librarianMenu.start();
+					break;
+				case "B": case "b": case "Borrower":
+					borrowerMenu.start();
+					break;
+				case "Q": case "q": case "Quit":
+					run = false;
+					break;
+				default:
+					println("I am sorry but that is not a user type. Please try again.");
+				}
 			}
+		} catch (CriticalSQLException e) {
+			println("There seems to have been an internal error. Unfortunaly we will have to disconnect.");
+			println("Have a nice day!");
+			LOGGER.log(Level.SEVERE, "Critical Error with internal server!");
 		}
 	}
 

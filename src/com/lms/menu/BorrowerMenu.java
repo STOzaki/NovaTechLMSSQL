@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 import com.lms.customExceptions.CriticalSQLException;
 import com.lms.customExceptions.DeleteException;
 import com.lms.customExceptions.InsertException;
+import com.lms.customExceptions.RetrieveException;
 import com.lms.model.Book;
 import com.lms.model.Borrower;
 import com.lms.model.Branch;
@@ -28,15 +30,20 @@ public class BorrowerMenu {
 	private final Appendable outStream;
 
 	private static final Logger LOGGER = Logger.getLogger(BorrowerMenu.class.getName());
-	
+
 	public BorrowerMenu(Scanner inStream, Appendable outStream) throws CriticalSQLException {
 		this.inStream = inStream;
 		this.outStream = outStream;
-		
-		borrowerService = new BorrowerServiceImpl("production");
+
+		try {
+			borrowerService = new BorrowerServiceImpl("production");
+		} catch (CriticalSQLException e) {
+			LOGGER.log(Level.WARNING, "Failed to create borrower service", e);
+			throw new CriticalSQLException("Failed to create borrower service", e);
+		}
 	}
 	
-	public boolean start() {
+	public boolean start() throws CriticalSQLException {
 		boolean borrowerRun = true;
 		while(borrowerRun) {
 			println("Enter the your Card Number: (or 'quit' to exit.)");
@@ -55,12 +62,15 @@ public class BorrowerMenu {
 				}
 			} catch (NumberFormatException e) {
 				println("That is not a number");
+			} catch (RetrieveException e) {
+				LOGGER.log(Level.WARNING, "Failed to get a borrower from ther borrower service", e);
+				throw new CriticalSQLException("Failed to get a borrower from ther borrower service", e);
 			}
 		}
 		return true;
 	}
 	
-	private boolean accessGrantedToBorrower(Borrower borrower) {
+	private boolean accessGrantedToBorrower(Borrower borrower) throws CriticalSQLException {
 		boolean accessRun = true;
 		while(accessRun) {
 			println("Choose an option:");
@@ -91,9 +101,15 @@ public class BorrowerMenu {
 		return true;
 	}
 	
-	private boolean returnABook(Borrower borrower) {
+	private boolean returnABook(Borrower borrower) throws CriticalSQLException {
 		println("Pick the Branch you want to check out from:");
-		List<Branch> listOfAllBranches = borrowerService.getAllBranches();
+		List<Branch> listOfAllBranches = new ArrayList<>();
+		try {
+			listOfAllBranches = borrowerService.getAllBranches();
+		} catch (RetrieveException e1) {
+			LOGGER.log(Level.WARNING, "Failed to get all branches", e1);
+			throw new CriticalSQLException("Failed to get all branches", e1);
+		}
 		printList(listOfAllBranches);
 		boolean runReturningABook = true;
 		while(runReturningABook) {
@@ -117,8 +133,14 @@ public class BorrowerMenu {
 		return true;
 	}
 	
-	private boolean pickingBookToReturn(Borrower borrower, Branch branch) {
-		List<Loan> BooksLoanedToBorrower = borrowerService.getAllBorrowedBooks(borrower);
+	private boolean pickingBookToReturn(Borrower borrower, Branch branch) throws CriticalSQLException {
+		List<Loan> BooksLoanedToBorrower = new ArrayList<>();
+		try {
+			BooksLoanedToBorrower = borrowerService.getAllBorrowedBooks(borrower);
+		} catch (RetrieveException e1) {
+			LOGGER.log(Level.WARNING, "Failed to get all borrowed books", e1);
+			throw new CriticalSQLException("Failed to get all borrowed books", e1);
+		}
 		List<Loan> BooksLoanedToBorrowerFromBranch = BooksLoanedToBorrower.parallelStream()
 				.filter(l -> l.getBranch().equals(branch)).collect(Collectors.toList());
 		printList(BooksLoanedToBorrowerFromBranch);
@@ -151,15 +173,24 @@ public class BorrowerMenu {
 			} catch (DeleteException e) {
 				LOGGER.log(Level.WARNING, "Failed to return a book");
 				println("Unfortunatly, we were unable to return your book at this time.");
+			} catch (RetrieveException e) {
+				LOGGER.log(Level.WARNING, "Failed to return a book", e);
+				throw new CriticalSQLException("Failed to return a book", e);
 			}
 		}
 		return true;
 		
 	}
 	
-	private boolean checkOutBookFromBranch(Borrower borrower) {
+	private boolean checkOutBookFromBranch(Borrower borrower) throws CriticalSQLException {
 		println("Pick the Branch you want to check out from:");
-		List<Branch> listOfAllBranches = borrowerService.getAllBranches();
+		List<Branch> listOfAllBranches = new ArrayList<>();
+		try {
+			listOfAllBranches = borrowerService.getAllBranches();
+		} catch (RetrieveException e1) {
+			LOGGER.log(Level.WARNING, "Failed to get all branches", e1);
+			throw new CriticalSQLException("Failed to get all branches", e1);
+		}
 		printList(listOfAllBranches);
 		boolean runCheckingBranch = true;
 		while(runCheckingBranch) {
@@ -183,8 +214,14 @@ public class BorrowerMenu {
 		return true;
 	}
 	
-	private boolean pickBookToCheckOut(Borrower borrower, Branch branch) {
-		Map<Book, Integer> mapOfAllBooksInBranch = borrowerService.getAllBranchCopies(branch);
+	private boolean pickBookToCheckOut(Borrower borrower, Branch branch) throws CriticalSQLException {
+		Map<Book, Integer> mapOfAllBooksInBranch = new HashMap<>();
+		try {
+			mapOfAllBooksInBranch = borrowerService.getAllBranchCopies(branch);
+		} catch (RetrieveException e1) {
+			LOGGER.log(Level.WARNING, "Failed to get all branch copies", e1);
+			throw new CriticalSQLException("Failed to get all branch copies", e1);
+		}
 		List<Book>listOfAllBooksInBranch = new ArrayList<>(mapOfAllBooksInBranch.keySet());
 		printList(listOfAllBooksInBranch);
 		boolean runPickingABookToCheckOut = true;
@@ -209,8 +246,14 @@ public class BorrowerMenu {
 		return true;
 	}
 	
-	private boolean borrowingABook(Borrower borrower, Branch branch, Book book) {
-		List<Loan> listOfAllLoansFromBorrower = borrowerService.getAllBorrowedBooks(borrower);
+	private boolean borrowingABook(Borrower borrower, Branch branch, Book book) throws CriticalSQLException {
+		List<Loan> listOfAllLoansFromBorrower = new ArrayList<>();
+		try {
+			listOfAllLoansFromBorrower = borrowerService.getAllBorrowedBooks(borrower);
+		} catch (RetrieveException e1) {
+			LOGGER.log(Level.WARNING, "Failed to get all borrowed books", e1);
+			throw new CriticalSQLException("Failed to get borrowed books", e1);
+		}
 		List<Loan> matchingListOfLoans = listOfAllLoansFromBorrower.parallelStream().filter(l -> l.getBook().equals(book) &&
 				l.getBorrower().equals(borrower) && l.getBranch().equals(branch)).collect(Collectors.toList());
 		// it found a loan that matched the primary Id
