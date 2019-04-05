@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import com.lms.customExceptions.CriticalSQLException;
 import com.lms.customExceptions.DeleteException;
 import com.lms.customExceptions.InsertException;
+import com.lms.customExceptions.RetrieveException;
 import com.lms.dao.BookLoansDaoImpl;
 import com.lms.dao.BorrowerDaoImpl;
 import com.lms.dao.CopiesDaoImpl;
@@ -62,24 +63,26 @@ public class BorrowerServiceImpl {
 		return newLoan;
 	}
 
-	public Map<Book, Integer> getAllBranchCopies(Branch branch) {
+	public Map<Book, Integer> getAllBranchCopies(Branch branch) throws RetrieveException {
 		Map<Book, Integer> listAllBranchCopies = new HashMap<>();
 		try {
 			listAllBranchCopies = copiesDaoImpl.getAllBranchCopies(branch);
 		} catch (SQLException e) {
-			LOGGER.log(Level.WARNING, "Failed to get all branch copies");
+			LOGGER.log(Level.WARNING, "Failed to get all branch copies", e);
+			throw new RetrieveException("Failed to get all branches", e);
 		}
 		return listAllBranchCopies;
 	}
 	
-	public boolean returnBook(Borrower borrower, Book book, Branch branch, LocalDate dueDate) throws DeleteException {
+	public boolean returnBook(Borrower borrower, Book book, Branch branch, LocalDate dueDate) throws DeleteException, RetrieveException {
 		boolean returnedBook = false;
 		Loan foundLoan = null;
 		try {
 			foundLoan = loanDaoImpl.get(book, borrower, branch);
 		} catch (SQLException e) {
 			LOGGER.log(Level.WARNING, "Failed to get entry in loan with Borrower CardNo = " + borrower.getCardNo() + " and book Id = " +
-						book.getId() + " and branch Id = " + branch.getId());
+						book.getId() + " and branch Id = " + branch.getId(), e);
+			throw new RetrieveException("Failed to get a entry in loan", e);
 		}
 
 		if(foundLoan != null) {
@@ -99,7 +102,7 @@ public class BorrowerServiceImpl {
 		return returnedBook;
 	}
 	
-	public List<Branch> getAllBranchesWithLoan(Borrower borrower) {
+	public List<Branch> getAllBranchesWithLoan(Borrower borrower) throws RetrieveException {
 		List<Branch> listOfAllBranchesWithLoan = new ArrayList<>();
 		try {
 			List<Loan> listOfAllLoans = loanDaoImpl.getAll();
@@ -110,13 +113,14 @@ public class BorrowerServiceImpl {
 			listOfAllBranchesWithLoan = listOfAllLoansWithBorrower.parallelStream().map(l -> l.getBranch())
 				.collect(Collectors.toList());
 		} catch (SQLException e) {
-			LOGGER.log(Level.WARNING, "Failed to get all loans");
+			LOGGER.log(Level.WARNING, "Failed to get a list of all branches the borrower borrowed from", e);
+			throw new RetrieveException("Failed to get a list of all branches the borrower borrowed from", e);
 		}
 
 		return listOfAllBranchesWithLoan;
 	}
 	
-	public List<Loan> getAllBorrowedBooks(Borrower borrower) {
+	public List<Loan> getAllBorrowedBooks(Borrower borrower) throws RetrieveException {
 		List<Loan> listOfAllLoanFromBorrower = new ArrayList<>();
 		try {
 			List<Loan> listOfAllLoans = loanDaoImpl.getAll();
@@ -125,29 +129,32 @@ public class BorrowerServiceImpl {
 					.filter(l -> l.getBorrower().equals(borrower))
 					.collect(Collectors.toList());
 		} catch (SQLException e) {
-			LOGGER.log(Level.WARNING, "Failed to get all loans");
+			LOGGER.log(Level.WARNING, "Failed to get a list of all loans the borrower borrowed", e);
+			throw new RetrieveException("Failed to get a list of all loans the borrower borrowed", e);
 		}
 		
 		return listOfAllLoanFromBorrower;
 	}
 	
-	public Borrower getBorrower(int cardNo) {
+	public Borrower getBorrower(int cardNo) throws RetrieveException {
 		Borrower borrower = null;
 		try {
 			borrower = borrowerDaoImpl.get(cardNo);
 		} catch (SQLException e) {
-			LOGGER.log(Level.WARNING, "Failed to get borrower with cardNo = " + cardNo);
+			LOGGER.log(Level.WARNING, "Failed to get borrower with cardNo = " + cardNo, e);
+			throw new RetrieveException("Failed to get a borrower", e);
 		}
 		return borrower;
 	}
 	
 
-	public List<Branch> getAllBranches() {
+	public List<Branch> getAllBranches() throws RetrieveException {
 		List<Branch> listOfBranches = new ArrayList<>();
 		try {
 			listOfBranches = branchDaoImpl.getAll();
 		} catch (SQLException e) {
-			LOGGER.log(Level.WARNING, "Failed to give a list of all branches in the branch table");
+			LOGGER.log(Level.WARNING, "Failed to give a list of all branches in the branch table", e);
+			throw new RetrieveException("Failed to get a list of all branches", e);
 		}
 		return listOfBranches;
 	}

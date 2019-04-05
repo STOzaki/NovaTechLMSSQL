@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import com.lms.customExceptions.CriticalSQLException;
 import com.lms.customExceptions.DeleteException;
 import com.lms.customExceptions.InsertException;
+import com.lms.customExceptions.RetrieveException;
 import com.lms.customExceptions.UpdateException;
 import com.lms.model.Book;
 import com.lms.model.Borrower;
@@ -72,7 +73,7 @@ public class AdministratorServiceTest {
 	}
 	
 	@AfterEach
-	public void tearThis() throws SQLException, DeleteException {
+	public void tearThis() throws SQLException, DeleteException, RetrieveException {
 		adminService.deleteBorrower(testBorrower);
 		adminService.deleteBook(testBook);
 		adminService.deleteBranch(testBranch);
@@ -81,7 +82,7 @@ public class AdministratorServiceTest {
 	
 	@DisplayName("Override due date correctly")
 	@Test
-	public void overrideDueDateForLoanTest() throws SQLException, UpdateException {
+	public void overrideDueDateForLoanTest() throws SQLException, UpdateException, RetrieveException {
 		boolean success = adminService.overrideDueDateForLoan(testBook, testBorrower, testBranch,
 				officialDueDate.plusWeeks(1));
 		
@@ -98,7 +99,7 @@ public class AdministratorServiceTest {
 	
 	@DisplayName("Override due date fails because there is no such loan")
 	@Test
-	public void overrideDueDateForNullLoanTest() throws SQLException, UpdateException {
+	public void overrideDueDateForNullLoanTest() throws SQLException, UpdateException, RetrieveException {
 		Book nonExistingBook = new Book(Integer.MAX_VALUE, "Some Title", null, null);
 		boolean success = adminService.overrideDueDateForLoan(nonExistingBook, testBorrower, testBranch,
 				officialDueDate.plusWeeks(1));
@@ -120,7 +121,7 @@ public class AdministratorServiceTest {
 		assertEquals(testLoan.getDueDate(), foundLoan.getDueDate());
 	}
 	
-	private List<Loan> getListThatMatches(Book book, Borrower borrower, Branch branch) {
+	private List<Loan> getListThatMatches(Book book, Borrower borrower, Branch branch) throws RetrieveException {
 		List<Loan> tempListOfAllLoans = adminService.getAllLoans();
 		List<Loan> listOfAllLoansThatMatch = tempListOfAllLoans.parallelStream().filter(l -> l.getBook().equals(book) &&
 				l.getBorrower().equals(borrower) && l.getBranch().equals(branch))

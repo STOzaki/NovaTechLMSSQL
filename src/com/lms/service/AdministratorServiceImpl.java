@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import com.lms.customExceptions.CriticalSQLException;
 import com.lms.customExceptions.DeleteException;
 import com.lms.customExceptions.InsertException;
+import com.lms.customExceptions.RetrieveException;
 import com.lms.customExceptions.UpdateException;
 import com.lms.dao.AuthorDaoImpl;
 import com.lms.dao.BookDaoImpl;
@@ -88,12 +89,13 @@ public class AdministratorServiceImpl {
 		}
 	}
 	
-	public List<Book> getAllBooks() {
+	public List<Book> getAllBooks() throws RetrieveException {
 		List<Book> listOfAllBooks = new ArrayList<>();
 		try {
 			listOfAllBooks = bookDaoImpl.getAll();
 		} catch (SQLException e) {
-			LOGGER.log(Level.WARNING, "Failed to get all Book");
+			LOGGER.log(Level.WARNING, "Failed to get all Book", e);
+			throw new RetrieveException("Failed to get all books", e);
 		}
 		return listOfAllBooks;
 	}
@@ -133,12 +135,13 @@ public class AdministratorServiceImpl {
 		}
 	}
 
-	public List<Author> getAllAuthors() {
+	public List<Author> getAllAuthors() throws RetrieveException {
 		List<Author> listOfAllAuthors = new ArrayList<>();
 		try {
 			listOfAllAuthors = authorDaoImpl.getAll();
 		} catch (SQLException e) {
-			LOGGER.log(Level.WARNING, "Failed to get all Authors");
+			LOGGER.log(Level.WARNING, "Failed to get all Authors", e);
+			throw new RetrieveException("Failed to get all authors", e);
 		}
 		return listOfAllAuthors;
 	}
@@ -192,12 +195,13 @@ public class AdministratorServiceImpl {
 		}
 	}
 
-	public List<Publisher> getAllPublishers() {
+	public List<Publisher> getAllPublishers() throws RetrieveException {
 		List<Publisher> listOfAllPublishers = new ArrayList<>();
 		try {
 			listOfAllPublishers = publisherDaoImpl.getAll();
 		} catch (SQLException e) {
-			LOGGER.log(Level.WARNING, "Failed to get all Publisher");
+			LOGGER.log(Level.WARNING, "Failed to get all Publisher", e);
+			throw new RetrieveException("Failed to get all publishers", e);
 		}
 		return listOfAllPublishers;
 	}
@@ -272,43 +276,47 @@ public class AdministratorServiceImpl {
 		}
 	}
 
-	public List<Borrower> getAllBorrowers() {
+	public List<Borrower> getAllBorrowers() throws RetrieveException {
 		List<Borrower> listOfAllBorrowers = new ArrayList<>();
 		try {
 			listOfAllBorrowers = borrowerDaoImpl.getAll();
 		} catch (SQLException e) {
-			LOGGER.log(Level.WARNING, "Failed to get all Borrower");
+			LOGGER.log(Level.WARNING, "Failed to get all Borrower", e);
+			throw new RetrieveException("Failed to get all Borrowers", e);
 		}
 		return listOfAllBorrowers;
 	}
 
-	public List<Loan> getAllLoans() {
+	public List<Loan> getAllLoans() throws RetrieveException {
 		List<Loan> listOfAllLoans = new ArrayList<>();
 		try {
 			listOfAllLoans = loanDaoImpl.getAll();
 		} catch (SQLException e) {
-			LOGGER.log(Level.WARNING, "Failed to get all Book Loans");
+			LOGGER.log(Level.WARNING, "Failed to get all Book Loans", e);
+			throw new RetrieveException("Failed to get all loans", e);
 		}
 		return listOfAllLoans;
 	}
 
-	public List<Branch> getAllBranches() {
+	public List<Branch> getAllBranches() throws RetrieveException {
 		List<Branch> listOfAllBranches = new ArrayList<>();
 		try {
 			listOfAllBranches = branchDaoImpl.getAll();
 		} catch (SQLException e) {
-			LOGGER.log(Level.WARNING, "Failed to get all Branches");
+			LOGGER.log(Level.WARNING, "Failed to get all Branches", e);
+			throw new RetrieveException("Failed to get all branches", e);
 		}
 		return listOfAllBranches;
 	}
 
-	public boolean overrideDueDateForLoan(Book book, Borrower borrower, Branch branch, LocalDate dueDate) throws UpdateException {
+	public boolean overrideDueDateForLoan(Book book, Borrower borrower, Branch branch, LocalDate dueDate) throws UpdateException, RetrieveException {
 		boolean success = false;
 		Loan foundLoan = null;
 		try {
 			foundLoan = loanDaoImpl.get(book, borrower, branch);
 		} catch (SQLException e1) {
-			LOGGER.log(Level.WARNING, "Failed to get the Book Loans");
+			LOGGER.log(Level.WARNING, "Failed to get the Book Loans", e1);
+			throw new RetrieveException("Failed to get a book loan", e1);
 		}
 
 		if(foundLoan != null) {
