@@ -77,7 +77,7 @@ public class BorrowerServiceTest {
 	}
 	
 	@AfterEach
-	public void tearThis() throws SQLException, DeleteException, UnknownSQLException, RetrieveException {
+	public void tearThis() throws SQLException, DeleteException, UnknownSQLException, RetrieveException, CriticalSQLException {
 		// WARNING maybe something that doesn't call the method we are trying to test
 		adminService.deleteBorrower(testBorrower);
 		adminService.deleteBook(testBook);
@@ -88,7 +88,7 @@ public class BorrowerServiceTest {
 
 	@DisplayName("Can return a book because not over the due date")
 	@Test
-	public void returnBookTest() throws DeleteException, RetrieveException {
+	public void returnBookTest() throws DeleteException, RetrieveException, CriticalSQLException {
 		// returning 1 week before it is due
 		boolean result = borrowerService.returnBook(testBorrower, testBook, testBranch, LocalDate.now().plusWeeks(1));
 		assertTrue(result);
@@ -96,7 +96,7 @@ public class BorrowerServiceTest {
 	
 	@DisplayName("Cannot return book if it cannot find that loan")
 	@Test
-	public void returnNullBookTest() throws DeleteException, RetrieveException {
+	public void returnNullBookTest() throws DeleteException, RetrieveException, CriticalSQLException {
 		Book fakeBook = new Book(Integer.MAX_VALUE, "Some Title", null, null);
 		boolean result = borrowerService.returnBook(testBorrower, fakeBook, testBranch, LocalDate.now().plusWeeks(1));
 		assertFalse(result);
@@ -104,7 +104,7 @@ public class BorrowerServiceTest {
 	
 	@DisplayName("Cannot return book if due date has already passed")
 	@Test
-	public void returnBookWithDueDatePassedTest() throws DeleteException, RetrieveException {
+	public void returnBookWithDueDatePassedTest() throws DeleteException, RetrieveException, CriticalSQLException {
 		// 1 week after book is due
 		boolean result = borrowerService.returnBook(testBorrower, testBook, testBranch, LocalDate.now().plusWeeks(3));
 		assertFalse(result);

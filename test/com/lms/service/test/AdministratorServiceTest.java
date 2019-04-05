@@ -73,7 +73,7 @@ public class AdministratorServiceTest {
 	}
 	
 	@AfterEach
-	public void tearThis() throws SQLException, DeleteException, RetrieveException {
+	public void tearThis() throws SQLException, DeleteException, RetrieveException, CriticalSQLException {
 		adminService.deleteBorrower(testBorrower);
 		adminService.deleteBook(testBook);
 		adminService.deleteBranch(testBranch);
@@ -82,7 +82,7 @@ public class AdministratorServiceTest {
 	
 	@DisplayName("Override due date correctly")
 	@Test
-	public void overrideDueDateForLoanTest() throws SQLException, UpdateException, RetrieveException {
+	public void overrideDueDateForLoanTest() throws SQLException, UpdateException, RetrieveException, CriticalSQLException {
 		boolean success = adminService.overrideDueDateForLoan(testBook, testBorrower, testBranch,
 				officialDueDate.plusWeeks(1));
 		
@@ -99,7 +99,7 @@ public class AdministratorServiceTest {
 	
 	@DisplayName("Override due date fails because there is no such loan")
 	@Test
-	public void overrideDueDateForNullLoanTest() throws SQLException, UpdateException, RetrieveException {
+	public void overrideDueDateForNullLoanTest() throws SQLException, UpdateException, RetrieveException, CriticalSQLException {
 		Book nonExistingBook = new Book(Integer.MAX_VALUE, "Some Title", null, null);
 		boolean success = adminService.overrideDueDateForLoan(nonExistingBook, testBorrower, testBranch,
 				officialDueDate.plusWeeks(1));
@@ -120,7 +120,7 @@ public class AdministratorServiceTest {
 		assertFalse(success);
 		assertEquals(testLoan.getDueDate(), foundLoan.getDueDate());
 	}
-	
+
 	private List<Loan> getListThatMatches(Book book, Borrower borrower, Branch branch) throws RetrieveException {
 		List<Loan> tempListOfAllLoans = adminService.getAllLoans();
 		List<Loan> listOfAllLoansThatMatch = tempListOfAllLoans.parallelStream().filter(l -> l.getBook().equals(book) &&
