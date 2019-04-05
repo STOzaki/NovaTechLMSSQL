@@ -49,7 +49,7 @@ public class BorrowerServiceImpl {
 		ConnectingToDataBase.closingConnection(conn);
 	}
 
-	public Loan borrowBook(Borrower borrower, Book book, Branch branch, LocalDateTime dateOut, LocalDate dueDate) throws InsertException {
+	public Loan borrowBook(Borrower borrower, Book book, Branch branch, LocalDateTime dateOut, LocalDate dueDate) throws InsertException, CriticalSQLException {
 		Loan newLoan = null;
 		try {
 			newLoan = loanDaoImpl.create(book, borrower, branch, dateOut, dueDate);
@@ -74,7 +74,7 @@ public class BorrowerServiceImpl {
 		return listAllBranchCopies;
 	}
 	
-	public boolean returnBook(Borrower borrower, Book book, Branch branch, LocalDate dueDate) throws DeleteException, RetrieveException {
+	public boolean returnBook(Borrower borrower, Book book, Branch branch, LocalDate dueDate) throws DeleteException, RetrieveException, CriticalSQLException {
 		boolean returnedBook = false;
 		Loan foundLoan = null;
 		try {
@@ -159,13 +159,14 @@ public class BorrowerServiceImpl {
 		return listOfBranches;
 	}
 	
-	private void rollingBack() {
+	private void rollingBack() throws CriticalSQLException {
 		if (conn != null) {
             try {
                 LOGGER.log(Level.WARNING, "Transaction is being rolled back");
                 conn.rollback();
             } catch(SQLException excep) {
             	LOGGER.log(Level.WARNING, excep.getMessage() + " in this class: " + excep.getClass());
+            	throw new CriticalSQLException("Rollback Failed", excep);
             }
 		}
 	}

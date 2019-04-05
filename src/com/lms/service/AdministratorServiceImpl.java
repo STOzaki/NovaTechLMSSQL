@@ -54,7 +54,7 @@ public class AdministratorServiceImpl {
 		ConnectingToDataBase.closingConnection(conn);
 	}
 
-	public Book createBook(String title, Author author, Publisher publisher) throws InsertException {
+	public Book createBook(String title, Author author, Publisher publisher) throws InsertException, CriticalSQLException {
 		Book book = null;
 		try {
 			book = bookDaoImpl.create(title, author, publisher);
@@ -67,7 +67,7 @@ public class AdministratorServiceImpl {
 		return book;
 	}
 	
-	public void updateBook(Book book) throws UpdateException {
+	public void updateBook(Book book) throws UpdateException, CriticalSQLException {
 		try {
 			bookDaoImpl.update(book);
 			conn.commit();
@@ -79,7 +79,7 @@ public class AdministratorServiceImpl {
 	}
 	
 
-	public void deleteBook(Book book) throws DeleteException {
+	public void deleteBook(Book book) throws DeleteException, CriticalSQLException {
 		try {
 			bookDaoImpl.delete(book);
 		} catch (SQLException e) {
@@ -100,7 +100,7 @@ public class AdministratorServiceImpl {
 		return listOfAllBooks;
 	}
 
-	public Author createAuthor(String name) throws InsertException {
+	public Author createAuthor(String name) throws InsertException, CriticalSQLException {
 		Author author = null;
 		try {
 			author = authorDaoImpl.create(name);
@@ -113,7 +113,7 @@ public class AdministratorServiceImpl {
 		return author;
 	}
 
-	public void updateAuthor(Author author) throws UpdateException {
+	public void updateAuthor(Author author) throws UpdateException, CriticalSQLException {
 		try {
 			authorDaoImpl.update(author);
 			conn.commit();
@@ -124,7 +124,7 @@ public class AdministratorServiceImpl {
 		}
 	}
 
-	public void deleteAuthor(Author author) throws DeleteException {
+	public void deleteAuthor(Author author) throws DeleteException, CriticalSQLException {
 		try {
 			authorDaoImpl.delete(author);
 			conn.commit();
@@ -147,7 +147,7 @@ public class AdministratorServiceImpl {
 	}
 
 	// publisher should not have null columns
-	public Publisher createPublisher(String name) throws InsertException {
+	public Publisher createPublisher(String name) throws InsertException, CriticalSQLException {
 		Publisher publisher = null;
 		try {
 			publisher = publisherDaoImpl.create(name, "", "");
@@ -160,7 +160,7 @@ public class AdministratorServiceImpl {
 		return publisher;
 	}
 
-	public Publisher createPublisher(String name, String address, String phone) throws InsertException {
+	public Publisher createPublisher(String name, String address, String phone) throws InsertException, CriticalSQLException {
 		Publisher publisher = null;
 		try {
 			publisher = publisherDaoImpl.create(name, address, phone);
@@ -173,7 +173,7 @@ public class AdministratorServiceImpl {
 		return publisher;
 	}
 
-	public void updatePublisher(Publisher publisher) throws UpdateException {
+	public void updatePublisher(Publisher publisher) throws UpdateException, CriticalSQLException {
 		try {
 			publisherDaoImpl.update(publisher);
 			conn.commit();
@@ -184,7 +184,7 @@ public class AdministratorServiceImpl {
 		}
 	}
 
-	public void deletePublisher(Publisher publisher) throws DeleteException {
+	public void deletePublisher(Publisher publisher) throws DeleteException, CriticalSQLException {
 		try {
 			publisherDaoImpl.delete(publisher);
 			conn.commit();
@@ -206,7 +206,7 @@ public class AdministratorServiceImpl {
 		return listOfAllPublishers;
 	}
 
-	public Branch createBranch(String name, String address) throws InsertException {
+	public Branch createBranch(String name, String address) throws InsertException, CriticalSQLException {
 		Branch branch = null;
 		try {
 			branch = branchDaoImpl.create(name, address);
@@ -219,7 +219,7 @@ public class AdministratorServiceImpl {
 		return branch;
 	}
 
-	public void deleteBranch(Branch branch) throws DeleteException {
+	public void deleteBranch(Branch branch) throws DeleteException, CriticalSQLException {
 		try {
 			branchDaoImpl.delete(branch);
 			conn.commit();
@@ -230,7 +230,7 @@ public class AdministratorServiceImpl {
 		}
 	}
 
-	public void updateBranch(Branch branch) throws UpdateException {
+	public void updateBranch(Branch branch) throws UpdateException, CriticalSQLException {
 		try {
 			branchDaoImpl.update(branch);
 			conn.commit();
@@ -241,7 +241,7 @@ public class AdministratorServiceImpl {
 		}
 	}
 
-	public Borrower createBorrower(String name, String address, String phone) throws InsertException {
+	public Borrower createBorrower(String name, String address, String phone) throws InsertException, CriticalSQLException {
 		Borrower borrower = null;
 		try {
 			borrower = borrowerDaoImpl.create(name, address, phone);
@@ -254,7 +254,7 @@ public class AdministratorServiceImpl {
 		return borrower;
 	}
 
-	public void updateBorrower(Borrower borrower) throws UpdateException {
+	public void updateBorrower(Borrower borrower) throws UpdateException, CriticalSQLException {
 		try {
 			borrowerDaoImpl.update(borrower);
 			conn.commit();
@@ -265,7 +265,7 @@ public class AdministratorServiceImpl {
 		}
 	}
 
-	public void deleteBorrower(Borrower borrower) throws DeleteException {
+	public void deleteBorrower(Borrower borrower) throws DeleteException, CriticalSQLException {
 		try {
 			borrowerDaoImpl.delete(borrower);
 			conn.commit();
@@ -309,7 +309,7 @@ public class AdministratorServiceImpl {
 		return listOfAllBranches;
 	}
 
-	public boolean overrideDueDateForLoan(Book book, Borrower borrower, Branch branch, LocalDate dueDate) throws UpdateException, RetrieveException {
+	public boolean overrideDueDateForLoan(Book book, Borrower borrower, Branch branch, LocalDate dueDate) throws UpdateException, RetrieveException, CriticalSQLException {
 		boolean success = false;
 		Loan foundLoan = null;
 		try {
@@ -334,13 +334,14 @@ public class AdministratorServiceImpl {
 		return success;
 	}
 	
-	private void rollingBack() {
+	private void rollingBack() throws CriticalSQLException {
 		if (conn != null) {
             try {
                 LOGGER.log(Level.WARNING, "Transaction is being rolled back");
                 conn.rollback();
             } catch(SQLException excep) {
             	LOGGER.log(Level.WARNING, excep.getMessage() + " in this class: " + excep.getClass());
+            	throw new CriticalSQLException("Rollback Failed", excep);
             }
 		}
 	}

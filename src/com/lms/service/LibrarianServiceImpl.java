@@ -41,7 +41,7 @@ public class LibrarianServiceImpl implements LibrarianService {
 		ConnectingToDataBase.closingConnection(conn);
 	}
 
-	public void updateBranch(Branch branch) throws UpdateException {
+	public void updateBranch(Branch branch) throws UpdateException, CriticalSQLException {
 		try {
 			branchDaoImpl.update(branch);
 			conn.commit();
@@ -53,7 +53,7 @@ public class LibrarianServiceImpl implements LibrarianService {
 	}
 	
 
-	public void setBranchCopies(Branch branch, Book book, int noOfCopies) throws UnknownSQLException {
+	public void setBranchCopies(Branch branch, Book book, int noOfCopies) throws UnknownSQLException, CriticalSQLException {
 		try {
 			copiesDaoImpl.setCopies(branch, book, noOfCopies);
 			conn.commit();
@@ -98,13 +98,14 @@ public class LibrarianServiceImpl implements LibrarianService {
 		return listOfBranches;
 	}
 	
-	private void rollingBack() {
+	private void rollingBack() throws CriticalSQLException {
 		if (conn != null) {
             try {
                 LOGGER.log(Level.WARNING, "Transaction is being rolled back");
                 conn.rollback();
             } catch(SQLException excep) {
             	LOGGER.log(Level.WARNING, excep.getMessage() + " in this class: " + excep.getClass());
+            	throw new CriticalSQLException("Rollback Failed", excep);
             }
 		}
 	}
