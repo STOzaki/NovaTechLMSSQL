@@ -2,6 +2,8 @@ package com.lms.menu;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -9,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.lms.customExceptions.CriticalSQLException;
+import com.lms.customExceptions.RetrieveException;
 import com.lms.customExceptions.UnknownSQLException;
 import com.lms.customExceptions.UpdateException;
 import com.lms.model.Book;
@@ -27,14 +30,25 @@ public class LibrarianMenu {
 		this.inStream = inStream;
 		this.outStream = outStream;
 
-		libraryService = new LibrarianServiceImpl("production");
+		try {
+			libraryService = new LibrarianServiceImpl("production");
+		} catch (CriticalSQLException e) {
+			LOGGER.log(Level.WARNING, "Was not able to initialize library services", e);
+			throw new CriticalSQLException("Was not able to initialize library services", e);
+		}
 	}
 	
-	public boolean start() {
+	public boolean start() throws CriticalSQLException {
 		boolean libRun = true;
 		while(libRun) {
 			println("Type the number associated with the branch you manage.");
-			List<Branch> listOfAllBranches = libraryService.getAllBranches();
+			List<Branch> listOfAllBranches = new ArrayList<>();
+			try {
+				listOfAllBranches = libraryService.getAllBranches();
+			} catch (RetrieveException e1) {
+				LOGGER.log(Level.WARNING, "Could not load list of all branches", e1);
+				throw new CriticalSQLException("Could not load list of all branches", e1);
+			}
 			printList(listOfAllBranches);
 			try {
 				int branchNum = Integer.parseInt(inStream.nextLine());
@@ -55,7 +69,7 @@ public class LibrarianMenu {
 		return true;
 	}
 	
-	private boolean librarianOptions(Branch branch) {
+	private boolean librarianOptions(Branch branch) throws CriticalSQLException {
 		boolean libOptions = true;
 		while(libOptions) {
 			println("Choose an option:");
@@ -86,11 +100,17 @@ public class LibrarianMenu {
 		return true;
 	}
 	
-	private boolean addCopiesOfBooks(Branch branch) {
+	private boolean addCopiesOfBooks(Branch branch) throws CriticalSQLException {
 		boolean addingCopies = true;
 		while(addingCopies) {
 			println("Type the number associated with the book you want to add copies of, to your branch.");
-			List<Book> listOfAllBooks = libraryService.getAllBooks();
+			List<Book> listOfAllBooks = new ArrayList<>();
+			try {
+				listOfAllBooks = libraryService.getAllBooks();
+			} catch (RetrieveException e1) {
+				LOGGER.log(Level.WARNING, "Could not get a list of all books", e1);
+				throw new CriticalSQLException("Could not get a list of all books", e1);
+			}
 			printList(listOfAllBooks);
 			try {
 				int bookNum = Integer.parseInt(inStream.nextLine());
@@ -111,8 +131,14 @@ public class LibrarianMenu {
 		return true;
 	}
 	
-	private boolean addCopiesOfABook(Branch branch, Book book) {
-		Map<Branch, Map<Book, Integer>> listOfAllCopies = libraryService.getAllCopies();
+	private boolean addCopiesOfABook(Branch branch, Book book) throws CriticalSQLException {
+		Map<Branch, Map<Book, Integer>> listOfAllCopies = new HashMap<>();
+		try {
+			listOfAllCopies = libraryService.getAllCopies();
+		} catch (RetrieveException e1) {
+			LOGGER.log(Level.WARNING, "Failed to get a list of book copies", e1);
+			throw new CriticalSQLException("Failed to get a list of book copies", e1);
+		}
 		int existingNumOfCopies = 0;
 		if(listOfAllCopies.containsKey(branch)) {
 			Map<Book, Integer> listOfAllCopiesOfABranch = listOfAllCopies.get(branch);

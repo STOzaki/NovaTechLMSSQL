@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.time.DateTimeException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -12,6 +13,7 @@ import java.util.logging.Logger;
 import com.lms.customExceptions.CriticalSQLException;
 import com.lms.customExceptions.DeleteException;
 import com.lms.customExceptions.InsertException;
+import com.lms.customExceptions.RetrieveException;
 import com.lms.customExceptions.UpdateException;
 import com.lms.model.Author;
 import com.lms.model.Book;
@@ -28,15 +30,20 @@ public class AdminMenu {
 	private final Appendable outStream;
 	
 	private static final Logger LOGGER = Logger.getLogger(AdminMenu.class.getName());
-	
+
 	public AdminMenu(Scanner inStream, Appendable outStream) throws CriticalSQLException {
 		this.inStream = inStream;
 		this.outStream = outStream;
 
-		adminService = new AdministratorServiceImpl("production");	
+		try {
+			adminService = new AdministratorServiceImpl("production");
+		} catch (CriticalSQLException e) {
+			LOGGER.log(Level.WARNING, "Failed to initialize admin services", e);
+			throw new CriticalSQLException("Failed to initialize admin services", e);
+		}
 	}
 	
-	public boolean start() {
+	public boolean start() throws CriticalSQLException {
 		boolean accessRun = true;
 		while(accessRun) {
 			println("What would you like to do?");
@@ -75,8 +82,14 @@ public class AdminMenu {
 		return true;
 	}
 
-	private boolean overrideDueDate() {
-		List<Loan> listOfLoans = adminService.getAllLoans();
+	private boolean overrideDueDate() throws CriticalSQLException {
+		List<Loan> listOfLoans = new ArrayList<>();
+		try {
+			listOfLoans = adminService.getAllLoans();
+		} catch (RetrieveException e1) {
+			LOGGER.log(Level.WARNING, "Failed to get all loans", e1);
+			throw new CriticalSQLException("Failed to get all loans", e1);
+		}
 		
 		println("Which loan would you like to override the due date");
 		printList(listOfLoans);
@@ -102,11 +115,14 @@ public class AdminMenu {
 		} catch (UpdateException e) {
 			LOGGER.log(Level.WARNING, "Failed to override due date");
 			println("We were unable to override due date");
+		} catch (RetrieveException e) {
+			LOGGER.log(Level.WARNING, "Failed to override due date", e);
+			throw new CriticalSQLException("Failed to override due date", e);
 		}
 		return true;
 	}
 	
-	private boolean deleteToADataBase() {
+	private boolean deleteToADataBase() throws CriticalSQLException {
 		boolean runDeleteToDataBase = true;
 		while(runDeleteToDataBase) {
 			println("Which object in a database would you like to delete?");
@@ -144,8 +160,14 @@ public class AdminMenu {
 		return true;
 	}
 	
-	private boolean deleteToBook() {
-		List<Book> bookList = adminService.getAllBooks();
+	private boolean deleteToBook() throws CriticalSQLException {
+		List<Book> bookList = new ArrayList<>();
+		try {
+			bookList = adminService.getAllBooks();
+		} catch (RetrieveException e1) {
+			LOGGER.log(Level.WARNING, "Failed to get all books", e1);
+			throw new CriticalSQLException("Failed to get all books", e1);
+		}
 		println("Which book would you like to delete?");
 		printList(bookList);
 		Book deletingBook = pickingFromAList(bookList);
@@ -161,8 +183,14 @@ public class AdminMenu {
 		return true;
 	}
 
-	private boolean deleteToAuthor() {
-		List<Author> authorList = adminService.getAllAuthors();
+	private boolean deleteToAuthor() throws CriticalSQLException {
+		List<Author> authorList = new ArrayList<>();
+		try {
+			authorList = adminService.getAllAuthors();
+		} catch (RetrieveException e1) {
+			LOGGER.log(Level.WARNING, "Failed to get all authors", e1);
+			throw new CriticalSQLException("Failed to get all authors", e1);
+		}
 		println("Which author would you like to delete?");
 		printList(authorList);
 		Author deletingAuthor = pickingFromAList(authorList);
@@ -178,8 +206,14 @@ public class AdminMenu {
 		return true;
 	}
 
-	private boolean deleteToPublisher() {
-		List<Publisher> publisherList = adminService.getAllPublishers();
+	private boolean deleteToPublisher() throws CriticalSQLException {
+		List<Publisher> publisherList = new ArrayList<>();
+		try {
+			publisherList = adminService.getAllPublishers();
+		} catch (RetrieveException e1) {
+			LOGGER.log(Level.WARNING, "Failed to get all publishers", e1);
+			throw new CriticalSQLException("Failed to get all publishers", e1);
+		}
 		println("Which publisher would you like to delete?");
 		printList(publisherList);
 		Publisher deletingPublisher = pickingFromAList(publisherList);
@@ -195,8 +229,14 @@ public class AdminMenu {
 		return true;
 	}
 
-	private boolean deleteToBranch() {
-		List<Branch> branchList = adminService.getAllBranches();
+	private boolean deleteToBranch() throws CriticalSQLException {
+		List<Branch> branchList = new ArrayList<>();
+		try {
+			branchList = adminService.getAllBranches();
+		} catch (RetrieveException e1) {
+			LOGGER.log(Level.WARNING, "Failed to get all branches", e1);
+			throw new CriticalSQLException("Failed to get all branches", e1);
+		}
 		println("Which branch would you like to delete?");
 		printList(branchList);
 		Branch deletingBranch = pickingFromAList(branchList);
@@ -212,8 +252,14 @@ public class AdminMenu {
 		return true;
 	}
 
-	private boolean deleteToBorrower() {
-		List<Borrower> borrowerList = adminService.getAllBorrowers();
+	private boolean deleteToBorrower() throws CriticalSQLException {
+		List<Borrower> borrowerList = new ArrayList<>();
+		try {
+			borrowerList = adminService.getAllBorrowers();
+		} catch (RetrieveException e1) {
+			LOGGER.log(Level.WARNING, "Failed to get all borrowers", e1);
+			throw new CriticalSQLException("Failed to get all borrowers", e1);
+		}
 		println("Which borrower would you like to delete?");
 		printList(borrowerList);
 		Borrower deletingBorrower = pickingFromAList(borrowerList);
@@ -229,7 +275,7 @@ public class AdminMenu {
 		return true;
 	}
 	
-	private boolean updateToADataBase() {
+	private boolean updateToADataBase() throws CriticalSQLException {
 		boolean runAddingToDataBase = true;
 		while(runAddingToDataBase) {
 			println("Which database would you like to update?");
@@ -267,10 +313,18 @@ public class AdminMenu {
 		return true;
 	}
 	
-	private boolean updateToBook() {
-		List<Book> bookList = adminService.getAllBooks();
-		List<Author> authorList = adminService.getAllAuthors();
-		List<Publisher> publisherList = adminService.getAllPublishers();
+	private boolean updateToBook() throws CriticalSQLException {
+		List<Book> bookList = new ArrayList<>();
+		List<Author> authorList = new ArrayList<>();
+		List<Publisher> publisherList = new ArrayList<>();
+		try {
+			authorList = adminService.getAllAuthors();
+			bookList = adminService.getAllBooks();
+			publisherList = adminService.getAllPublishers();
+		} catch (RetrieveException e1) {
+			LOGGER.log(Level.WARNING, "Failed to get a list of authors, books, and or publishers", e1);
+			throw new CriticalSQLException("Failed to a list of authors, books, and or publishers", e1);
+		}
 		
 		println("Which book would you like to update?");
 		printList(bookList);
@@ -309,8 +363,14 @@ public class AdminMenu {
 		return true;
 	}
 	
-	private boolean updateToAuthor() {
-		List<Author> authorList = adminService.getAllAuthors();
+	private boolean updateToAuthor() throws CriticalSQLException {
+		List<Author> authorList = new ArrayList<>();
+		try {
+			authorList = adminService.getAllAuthors();
+		} catch (RetrieveException e1) {
+			LOGGER.log(Level.WARNING, "Failed to get all authors", e1);
+			throw new CriticalSQLException("Failed to get all authors", e1);
+		}
 
 		println("Which author would you like to update?");
 		printList(authorList);
@@ -332,8 +392,14 @@ public class AdminMenu {
 		return true;
 	}
 	
-	private boolean updateToPublisher() {
-		List<Publisher> publisherList = adminService.getAllPublishers();
+	private boolean updateToPublisher() throws CriticalSQLException {
+		List<Publisher> publisherList = new ArrayList<>();
+		try {
+			publisherList = adminService.getAllPublishers();
+		} catch (RetrieveException e1) {
+			LOGGER.log(Level.WARNING, "Failed to get all publishers", e1);
+			throw new CriticalSQLException("Failed to get all publishers", e1);
+		}
 
 		println("Which publisher would you like to update?");
 		printList(publisherList);
@@ -364,8 +430,14 @@ public class AdminMenu {
 		return true;
 	}
 
-	private boolean updateToBranch() {
-		List<Branch> branchList = adminService.getAllBranches();
+	private boolean updateToBranch() throws CriticalSQLException {
+		List<Branch> branchList = new ArrayList<>();
+		try {
+			branchList = adminService.getAllBranches();
+		} catch (RetrieveException e1) {
+			LOGGER.log(Level.WARNING, "Failed to get all branches", e1);
+			throw new CriticalSQLException("Failed to get all branches", e1);
+		}
 
 		println("Which branch would you like to update?");
 		printList(branchList);
@@ -391,8 +463,14 @@ public class AdminMenu {
 		return true;
 	}
 
-	private boolean updateToBorrower() {
-		List<Borrower> borrowerList = adminService.getAllBorrowers();
+	private boolean updateToBorrower() throws CriticalSQLException {
+		List<Borrower> borrowerList = new ArrayList<>();
+		try {
+			borrowerList = adminService.getAllBorrowers();
+		} catch (RetrieveException e1) {
+			LOGGER.log(Level.WARNING, "Failed to get all borrowers", e1);
+			throw new CriticalSQLException("Failed to get all borrowers", e1);
+		}
 
 		println("Which borrower would you like to update?");
 		printList(borrowerList);
@@ -424,7 +502,7 @@ public class AdminMenu {
 		
 	}
 	
-	private boolean addingToADataBase() {
+	private boolean addingToADataBase() throws CriticalSQLException {
 		boolean runAddingToDataBase = true;
 		while(runAddingToDataBase) {
 			println("Which database would you like to add to?");
@@ -463,9 +541,16 @@ public class AdminMenu {
 		
 	}
 	
-	private boolean addingToBook() {
-		List<Author> authorList = adminService.getAllAuthors();
-		List<Publisher> publisherList = adminService.getAllPublishers();
+	private boolean addingToBook() throws CriticalSQLException {
+		List<Author> authorList = new ArrayList<>();
+		List<Publisher> publisherList = new ArrayList<>();
+		try {
+			authorList = adminService.getAllAuthors();
+			publisherList = adminService.getAllPublishers();
+		} catch (RetrieveException e1) {
+			LOGGER.log(Level.WARNING, "Failed to get all authors or publishers", e1);
+			throw new CriticalSQLException("Failed to get all authors or publishers", e1);
+		}
 		
 		println("Which author wrote this book?");
 		printList(authorList);

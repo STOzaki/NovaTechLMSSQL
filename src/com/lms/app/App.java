@@ -20,7 +20,9 @@ public class App {
 		} catch (final IOException except) {
 			LOGGER.log(Level.SEVERE, "I/O error dealing with System input", except);
 		} catch (CriticalSQLException e) {
-			System.out.println("There seems to have been an issue with starting this application");
+			System.out.println("I am sorry but we had some trouble initializing this application");
+			System.out.println("Please contact the administrator for this issue.");
+			System.out.println("Have a nice day!");
 		}
 	}
 }
