@@ -1,7 +1,6 @@
 package com.lms.menu;
 
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,12 +12,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import com.lms.customExceptions.CriticalSQLException;
 import com.lms.customExceptions.DeleteException;
 import com.lms.customExceptions.InsertException;
-import com.lms.dao.BookLoansDaoImpl;
-import com.lms.dao.BorrowerDaoImpl;
-import com.lms.dao.CopiesDaoImpl;
-import com.lms.dao.LibraryBranchDaoImpl;
 import com.lms.model.Book;
 import com.lms.model.Borrower;
 import com.lms.model.Branch;
@@ -33,22 +29,11 @@ public class BorrowerMenu {
 
 	private static final Logger LOGGER = Logger.getLogger(BorrowerMenu.class.getName());
 	
-	public BorrowerMenu(Connection conn, Scanner inStream, Appendable outStream) {
+	public BorrowerMenu(Scanner inStream, Appendable outStream) throws CriticalSQLException {
 		this.inStream = inStream;
 		this.outStream = outStream;
-
-		// turn off auto commit
-        try {
-			conn.setAutoCommit(false);
-		} catch (SQLException e) {
-			LOGGER.log(Level.WARNING, "failed to set auto commit with error message: " + e.getMessage() +
-					" for class " + e.getClass());
-			println("Warning: we have a problem with setting up our connection to the database,");
-			println("so you may experience so problems. (Thank you)");
-		}
 		
-		borrowerService = new BorrowerServiceImpl(new BorrowerDaoImpl(conn), new BookLoansDaoImpl(conn),
-				new CopiesDaoImpl(conn), new LibraryBranchDaoImpl(conn), conn);
+		borrowerService = new BorrowerServiceImpl("production");
 	}
 	
 	public boolean start() {

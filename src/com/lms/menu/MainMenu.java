@@ -1,9 +1,11 @@
 package com.lms.menu;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.lms.customExceptions.CriticalSQLException;
+
 import java.util.Scanner;
 import java.io.IOException;
 import java.io.Reader;
@@ -19,23 +21,13 @@ public class MainMenu {
 	
 	private static final Logger LOGGER = Logger.getLogger(MainMenu.class.getName());
 
-	public MainMenu(Connection conn, Reader in, Appendable out) {
+	public MainMenu(Reader in, Appendable out) throws CriticalSQLException {
 		this.inStream = new Scanner(in);
 		this.outStream = out;
 		
-		// turn off auto commit
-        try {
-			conn.setAutoCommit(false);
-		} catch (SQLException e) {
-			LOGGER.log(Level.WARNING, "failed to set auto commit with error message: " + e.getMessage() +
-					" for class " + e.getClass());
-			println("Warning: we have a problem with setting up our connection to the database,");
-			println("so you may experience so problems. (Thank you)");
-		}
-		
-		adminMenu = new AdminMenu(conn, inStream, outStream);
-		borrowerMenu = new BorrowerMenu(conn, inStream, outStream);
-		librarianMenu = new LibrarianMenu(conn, inStream, outStream);
+		adminMenu = new AdminMenu(inStream, outStream);
+		borrowerMenu = new BorrowerMenu(inStream, outStream);
+		librarianMenu = new LibrarianMenu(inStream, outStream);
 	}
 
 	public void start() {

@@ -1,7 +1,6 @@
 package com.lms.menu;
 
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.DateTimeException;
 import java.time.LocalDate;
@@ -10,15 +9,10 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.lms.customExceptions.CriticalSQLException;
 import com.lms.customExceptions.DeleteException;
 import com.lms.customExceptions.InsertException;
 import com.lms.customExceptions.UpdateException;
-import com.lms.dao.AuthorDaoImpl;
-import com.lms.dao.BookDaoImpl;
-import com.lms.dao.BookLoansDaoImpl;
-import com.lms.dao.BorrowerDaoImpl;
-import com.lms.dao.LibraryBranchDaoImpl;
-import com.lms.dao.PublisherDaoImpl;
 import com.lms.model.Author;
 import com.lms.model.Book;
 import com.lms.model.Borrower;
@@ -35,23 +29,11 @@ public class AdminMenu {
 	
 	private static final Logger LOGGER = Logger.getLogger(AdminMenu.class.getName());
 	
-	public AdminMenu(Connection conn, Scanner inStream, Appendable outStream) {
+	public AdminMenu(Scanner inStream, Appendable outStream) throws CriticalSQLException {
 		this.inStream = inStream;
 		this.outStream = outStream;
-		
-		// turn off auto commit
-        try {
-			conn.setAutoCommit(false);
-		} catch (SQLException e) {
-			LOGGER.log(Level.WARNING, "failed to set auto commit with error message: " + e.getMessage() +
-					" for class " + e.getClass());
-			println("Warning: we have a problem with setting up our connection to the database,");
-			println("so you may experience so problems. (Thank you)");
-		}
 
-		adminService = new AdministratorServiceImpl(new BookDaoImpl(conn), new AuthorDaoImpl(conn),
-				new PublisherDaoImpl(conn), new LibraryBranchDaoImpl(conn),
-				new BorrowerDaoImpl(conn), new BookLoansDaoImpl(conn), conn);	
+		adminService = new AdministratorServiceImpl("production");	
 	}
 	
 	public boolean start() {
