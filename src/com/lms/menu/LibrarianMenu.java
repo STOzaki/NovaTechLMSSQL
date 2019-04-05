@@ -158,6 +158,7 @@ public class LibrarianMenu {
 			LOGGER.log(Level.WARNING, "Failed to set branch copies: " + e.getMessage());
 			println("I am sorry but there seems to have been a problem with updating the number of copies in " +
 					branch.getName() + " for " + book.getTitle());
+			throw new CriticalSQLException("Failed to set new branch copy amount", e);
 		}
 		return true;
 	}
