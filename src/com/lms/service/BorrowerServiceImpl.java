@@ -55,9 +55,9 @@ public class BorrowerServiceImpl {
 			conn.commit();
 		} catch (SQLException e) {
 			LOGGER.log(Level.WARNING, "Failed to create a loan with Borrower CardNo = " + borrower.getCardNo() + " and book Id = " +
-						book.getId() + " and branch Id = " + branch.getId());
+						book.getId() + " and branch Id = " + branch.getId(), e);
 			rollingBack();
-			throw new InsertException("Failed to create a loan in Book Loan");
+			throw new InsertException("Failed to create a loan in Book Loan", e);
 		}
 		return newLoan;
 	}
@@ -90,9 +90,9 @@ public class BorrowerServiceImpl {
 					conn.commit();
 				} catch (SQLException e) {
 					LOGGER.log(Level.WARNING, "Failed to delete loan entry with Borrower CardNo = " + borrower.getCardNo() + " and book Id = " +
-							book.getId() + " and branch Id = " + branch.getId());
+							book.getId() + " and branch Id = " + branch.getId(), e);
 					rollingBack();
-					throw new DeleteException("Failed to delete book loan");
+					throw new DeleteException("Failed to delete book loan", e);
 				}
 			}
 		}
