@@ -129,7 +129,7 @@ public class AdministratorServiceTest {
 		assertFalse(success);
 		assertEquals(testLoan.getDueDate(), foundLoan.getDueDate());
 	}
-	
+
 	private List<Loan> getListThatMatches(Book book, Borrower borrower, Branch branch) throws RetrieveException {
 		List<Loan> tempListOfAllLoans = adminService.getAllLoans();
 		List<Loan> listOfAllLoansThatMatch = tempListOfAllLoans.parallelStream().filter(l -> l.getBook().equals(book) &&

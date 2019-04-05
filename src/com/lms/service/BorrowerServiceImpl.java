@@ -44,7 +44,7 @@ public class BorrowerServiceImpl {
 		this.copiesDaoImpl = new CopiesDaoImpl(conn);
 		this.branchDaoImpl = new LibraryBranchDaoImpl(conn);
 	}
-	
+
 	public void closeConnection() {
 		ConnectingToDataBase.closingConnection(conn);
 	}

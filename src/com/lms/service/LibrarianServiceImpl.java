@@ -36,7 +36,7 @@ public class LibrarianServiceImpl implements LibrarianService {
 		this.bookDaoImpl = new BookDaoImpl(conn);
 		this.copiesDaoImpl = new CopiesDaoImpl(conn);
 	}
-	
+
 	public void closeConnection() {
 		ConnectingToDataBase.closingConnection(conn);
 	}
