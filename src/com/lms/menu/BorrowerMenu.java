@@ -33,40 +33,44 @@ public class BorrowerMenu {
 	public BorrowerMenu(Scanner inStream, Appendable outStream) throws CriticalSQLException {
 		this.inStream = inStream;
 		this.outStream = outStream;
-
-		try {
-			borrowerService = new BorrowerServiceImpl("production");
-		} catch (CriticalSQLException e) {
-			LOGGER.log(Level.WARNING, "Failed to create borrower service", e);
-			throw new CriticalSQLException("Failed to create borrower service", e);
-		}
 	}
 	
 	public boolean start() throws CriticalSQLException {
-		boolean borrowerRun = true;
-		while(borrowerRun) {
-			println("Enter the your Card Number: (or 'quit' to exit.)");
-			try {
-				String answer = inStream.nextLine();
-				if(answer.equals("quit")) {
-					borrowerRun = false;
-				} else {
-					int theirCardNo = Integer.parseInt(answer);
-					Borrower foundBorrower = borrowerService.getBorrower(theirCardNo);
-					if(foundBorrower != null) {
-						accessGrantedToBorrower(foundBorrower);
+		try {
+			borrowerService = new BorrowerServiceImpl("production");
+			boolean borrowerRun = true;
+			while(borrowerRun) {
+				println("Enter the your Card Number: (or 'quit' to exit.)");
+				try {
+					String answer = inStream.nextLine();
+					if(answer.equals("quit")) {
+						borrowerRun = false;
 					} else {
-						println("Access Denied. That is not a valid cardno.");
+						int theirCardNo = Integer.parseInt(answer);
+						Borrower foundBorrower = borrowerService.getBorrower(theirCardNo);
+						if(foundBorrower != null) {
+							accessGrantedToBorrower(foundBorrower);
+						} else {
+							println("Access Denied. That is not a valid cardno.");
+						}
 					}
+				} catch (NumberFormatException e) {
+					println("That is not a number");
+				} catch (RetrieveException e) {
+					LOGGER.log(Level.WARNING, "Failed to get a borrower from ther borrower service", e);
+					throw new CriticalSQLException("Failed to get a borrower from ther borrower service", e);
 				}
-			} catch (NumberFormatException e) {
-				println("That is not a number");
-			} catch (RetrieveException e) {
-				LOGGER.log(Level.WARNING, "Failed to get a borrower from ther borrower service", e);
-				throw new CriticalSQLException("Failed to get a borrower from ther borrower service", e);
+			}
+			return true;
+		} catch (CriticalSQLException e) {
+			throw new CriticalSQLException("Internal service error with the borrower service", e);
+		} finally {
+			try {
+				borrowerService.closeConnection();
+			} catch (Exception e) {
+				LOGGER.log(Level.WARNING, "Failed to close connection");
 			}
 		}
-		return true;
 	}
 	
 	private boolean accessGrantedToBorrower(Borrower borrower) throws CriticalSQLException {

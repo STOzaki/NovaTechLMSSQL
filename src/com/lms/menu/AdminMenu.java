@@ -33,52 +33,56 @@ public class AdminMenu {
 	public AdminMenu(Scanner inStream, Appendable outStream) throws CriticalSQLException {
 		this.inStream = inStream;
 		this.outStream = outStream;
-
-		try {
-			adminService = new AdministratorServiceImpl("production");
-		} catch (CriticalSQLException e) {
-			LOGGER.log(Level.WARNING, "Failed to initialize admin services", e);
-			throw new CriticalSQLException("Failed to initialize admin services", e);
-		}
 	}
 	
 	public boolean start() throws CriticalSQLException {
-		boolean accessRun = true;
-		while(accessRun) {
-			println("What would you like to do?");
-			println("1) Add");
-			println("2) Update");
-			println("3) Delete");
-			println("4) Over-ride Due Date for a Book Loan");
-			println("5) Return to Main Menu");
-			try {
-				int adminManipulatingChoice = Integer.parseInt(inStream.nextLine());
-				switch(adminManipulatingChoice) {
-				case 1:
-					addingToADataBase();
-					break;
-				case 2:
-					updateToADataBase();
-					break;
-				case 3:
-					deleteToADataBase();
-					break;
-				case 4:
-					overrideDueDate();
-					break;
-				case 5:
-					accessRun = false;
-					break;
-				default:
-					println("That is not an option, please try again");
-					break;
+		try {
+			adminService = new AdministratorServiceImpl("production");
+			boolean accessRun = true;
+			while(accessRun) {
+				println("What would you like to do?");
+				println("1) Add");
+				println("2) Update");
+				println("3) Delete");
+				println("4) Over-ride Due Date for a Book Loan");
+				println("5) Return to Main Menu");
+				try {
+					int adminManipulatingChoice = Integer.parseInt(inStream.nextLine());
+					switch(adminManipulatingChoice) {
+					case 1:
+						addingToADataBase();
+						break;
+					case 2:
+						updateToADataBase();
+						break;
+					case 3:
+						deleteToADataBase();
+						break;
+					case 4:
+						overrideDueDate();
+						break;
+					case 5:
+						accessRun = false;
+						break;
+					default:
+						println("That is not an option, please try again");
+						break;
+					}
+					
+				} catch (NumberFormatException e) {
+					println("That is not a number");
 				}
-				
-			} catch (NumberFormatException e) {
-				println("That is not a number");
+			}
+			return true;
+		} catch (CriticalSQLException e) {
+			throw new CriticalSQLException("Internal service error with the administrator service", e);
+		} finally {
+			try {
+				adminService.closeConnection();
+			} catch (Exception e) {
+				LOGGER.log(Level.WARNING, "Failed to close connection");
 			}
 		}
-		return true;
 	}
 
 	private boolean overrideDueDate() throws CriticalSQLException {
