@@ -114,6 +114,7 @@ public class AdminMenu {
 		} catch (UpdateException e) {
 			LOGGER.log(Level.WARNING, "Failed to override due date");
 			println("We were unable to override due date");
+			throw new CriticalSQLException("Failed to override due date", e);
 		} catch (RetrieveException e) {
 			LOGGER.log(Level.WARNING, "Failed to override due date", e);
 			throw new CriticalSQLException("Failed to override due date", e);
@@ -358,6 +359,7 @@ public class AdminMenu {
 		} catch (UpdateException e) {
 			LOGGER.log(Level.WARNING, "Failed to update book");
 			println("We could not update your requested book");
+			throw new CriticalSQLException("Failed to update a book", e);
 		}
 		return true;
 	}
@@ -387,6 +389,7 @@ public class AdminMenu {
 		} catch (UpdateException e) {
 			LOGGER.log(Level.WARNING, "Failed to update author");
 			println("We could not update your requested author");
+			throw new CriticalSQLException("Failed to update an author", e);
 		}
 		return true;
 	}
@@ -424,6 +427,7 @@ public class AdminMenu {
 		} catch (UpdateException e) {
 			LOGGER.log(Level.WARNING, "Failed to update publisher");
 			println("We could not update your requested publisher");
+			throw new CriticalSQLException("Failed to update publisher", e);
 		}
 		
 		return true;
@@ -458,6 +462,7 @@ public class AdminMenu {
 		} catch (UpdateException e) {
 			LOGGER.log(Level.WARNING, "Failed to update branch");
 			println("We could not update your requested library branch");
+			throw new CriticalSQLException("Failed to update branch", e);
 		}
 		return true;
 	}
@@ -495,6 +500,7 @@ public class AdminMenu {
 		} catch (UpdateException e) {
 			LOGGER.log(Level.WARNING, "Failed to update borrower");
 			println("We could not update your requested borrower");
+			throw new CriticalSQLException("Failed to update borrower", e);
 		}
 		
 		return true;
