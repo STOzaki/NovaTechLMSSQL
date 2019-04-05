@@ -28,44 +28,48 @@ public class LibrarianMenu {
 	public LibrarianMenu(Scanner inStream, Appendable outStream) throws CriticalSQLException {
 		this.inStream = inStream;
 		this.outStream = outStream;
-
-		try {
-			libraryService = new LibrarianServiceImpl("production");
-		} catch (CriticalSQLException e) {
-			LOGGER.log(Level.WARNING, "Was not able to initialize library services", e);
-			throw new CriticalSQLException("Was not able to initialize library services", e);
-		}
 	}
 	
 	public boolean start() throws CriticalSQLException {
-		boolean libRun = true;
-		while(libRun) {
-			println("Type the number associated with the branch you manage.");
-			List<Branch> listOfAllBranches = new ArrayList<>();
-			try {
-				listOfAllBranches = libraryService.getAllBranches();
-			} catch (RetrieveException e1) {
-				LOGGER.log(Level.WARNING, "Could not load list of all branches", e1);
-				throw new CriticalSQLException("Could not load list of all branches", e1);
-			}
-			printList(listOfAllBranches);
-			try {
-				int branchNum = Integer.parseInt(inStream.nextLine());
-				// -1 to keep in the range of the list (because the display will start from 1 not 0)
-				branchNum--;
-				if(branchNum == listOfAllBranches.size()) {
-					println("Back to Main Menu");
-					libRun = false;
-				} else if(branchNum < listOfAllBranches.size() && branchNum >= 0) {
-					librarianOptions(listOfAllBranches.get(branchNum));
-				} else {
-					println("That is not an option");
+		try {
+			libraryService = new LibrarianServiceImpl("production");
+			boolean libRun = true;
+			while(libRun) {
+				println("Type the number associated with the branch you manage.");
+				List<Branch> listOfAllBranches = new ArrayList<>();
+				try {
+					listOfAllBranches = libraryService.getAllBranches();
+				} catch (RetrieveException e1) {
+					LOGGER.log(Level.WARNING, "Could not load list of all branches", e1);
+					throw new CriticalSQLException("Could not load list of all branches", e1);
 				}
-			} catch (NumberFormatException e) {
-				println("That is not a number");
+				printList(listOfAllBranches);
+				try {
+					int branchNum = Integer.parseInt(inStream.nextLine());
+					// -1 to keep in the range of the list (because the display will start from 1 not 0)
+					branchNum--;
+					if(branchNum == listOfAllBranches.size()) {
+						println("Back to Main Menu");
+						libRun = false;
+					} else if(branchNum < listOfAllBranches.size() && branchNum >= 0) {
+						librarianOptions(listOfAllBranches.get(branchNum));
+					} else {
+						println("That is not an option");
+					}
+				} catch (NumberFormatException e) {
+					println("That is not a number");
+				}
+			}
+			return true;
+		} catch (CriticalSQLException e) {
+			throw new CriticalSQLException("Internal service error with the library service", e);
+		} finally {
+			try {
+				libraryService.closeConnection();
+			} catch (Exception e) {
+				LOGGER.log(Level.WARNING, "Failed to close connection");
 			}
 		}
-		return true;
 	}
 	
 	private boolean librarianOptions(Branch branch) throws CriticalSQLException {
