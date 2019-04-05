@@ -59,9 +59,9 @@ public class AdministratorServiceImpl {
 			book = bookDaoImpl.create(title, author, publisher);
 			conn.commit();
 		} catch (SQLException e) {
-			LOGGER.log(Level.WARNING, "Failed to create new book");
+			LOGGER.log(Level.WARNING, "Failed to create new book", e);
 			rollingBack();
-			throw new InsertException("Failed to create a book");
+			throw new InsertException("Failed to create a book", e);
 		}
 		return book;
 	}
@@ -71,9 +71,9 @@ public class AdministratorServiceImpl {
 			bookDaoImpl.update(book);
 			conn.commit();
 		} catch (SQLException e) {
-			LOGGER.log(Level.WARNING, "Failed to update Book");
+			LOGGER.log(Level.WARNING, "Failed to update Book", e);
 			rollingBack();
-			throw new UpdateException("Failed to update book");
+			throw new UpdateException("Failed to update book", e);
 		}
 	}
 	
@@ -82,9 +82,9 @@ public class AdministratorServiceImpl {
 		try {
 			bookDaoImpl.delete(book);
 		} catch (SQLException e) {
-			LOGGER.log(Level.WARNING, "Failed to delete Book");
+			LOGGER.log(Level.WARNING, "Failed to delete Book", e);
 			rollingBack();
-			throw new DeleteException("Failed to delete Book");
+			throw new DeleteException("Failed to delete Book", e);
 		}
 	}
 	
@@ -104,9 +104,9 @@ public class AdministratorServiceImpl {
 			author = authorDaoImpl.create(name);
 			conn.commit();
 		} catch (SQLException e) {
-			LOGGER.log(Level.WARNING, "Failed to create an Author");
+			LOGGER.log(Level.WARNING, "Failed to create an Author", e);
 			rollingBack();
-			throw new InsertException("Failed to create author");
+			throw new InsertException("Failed to create author", e);
 		}
 		return author;
 	}
@@ -116,9 +116,9 @@ public class AdministratorServiceImpl {
 			authorDaoImpl.update(author);
 			conn.commit();
 		} catch (SQLException e) {
-			LOGGER.log(Level.WARNING, "Failed to update an Author");
+			LOGGER.log(Level.WARNING, "Failed to update an Author", e);
 			rollingBack();
-			throw new UpdateException("Failed to update author");
+			throw new UpdateException("Failed to update author", e);
 		}
 	}
 
@@ -127,9 +127,9 @@ public class AdministratorServiceImpl {
 			authorDaoImpl.delete(author);
 			conn.commit();
 		} catch (SQLException e) {
-			LOGGER.log(Level.WARNING, "Failed to delete an Author");
+			LOGGER.log(Level.WARNING, "Failed to delete an Author", e);
 			rollingBack();
-			throw new DeleteException("Failed to delete author");
+			throw new DeleteException("Failed to delete author", e);
 		}
 	}
 
@@ -150,9 +150,9 @@ public class AdministratorServiceImpl {
 			publisher = publisherDaoImpl.create(name, "", "");
 			conn.commit();
 		} catch (SQLException e) {
-			LOGGER.log(Level.WARNING, "Failed to create an Publisher with just name");
+			LOGGER.log(Level.WARNING, "Failed to create an Publisher with just name", e);
 			rollingBack();
-			throw new InsertException("Failed to create publisher");
+			throw new InsertException("Failed to create publisher", e);
 		}
 		return publisher;
 	}
@@ -163,9 +163,9 @@ public class AdministratorServiceImpl {
 			publisher = publisherDaoImpl.create(name, address, phone);
 			conn.commit();
 		} catch (SQLException e) {
-			LOGGER.log(Level.WARNING, "Failed to create an Publisher with all attributes");
+			LOGGER.log(Level.WARNING, "Failed to create an Publisher with all attributes", e);
 			rollingBack();
-			throw new InsertException("Failed to create publisher");
+			throw new InsertException("Failed to create publisher", e);
 		}
 		return publisher;
 	}
@@ -175,9 +175,9 @@ public class AdministratorServiceImpl {
 			publisherDaoImpl.update(publisher);
 			conn.commit();
 		} catch (SQLException e) {
-			LOGGER.log(Level.WARNING, "Failed to update Publisher");
+			LOGGER.log(Level.WARNING, "Failed to update Publisher", e);
 			rollingBack();
-			throw new UpdateException("Failed to update publisher");
+			throw new UpdateException("Failed to update publisher", e);
 		}
 	}
 
@@ -186,9 +186,9 @@ public class AdministratorServiceImpl {
 			publisherDaoImpl.delete(publisher);
 			conn.commit();
 		} catch (SQLException e) {
-			LOGGER.log(Level.WARNING, "Failed to delete Publisher");
+			LOGGER.log(Level.WARNING, "Failed to delete Publisher", e);
 			rollingBack();
-			throw new DeleteException("Failed to delete publisher");
+			throw new DeleteException("Failed to delete publisher", e);
 		}
 	}
 
@@ -208,9 +208,9 @@ public class AdministratorServiceImpl {
 			branch = branchDaoImpl.create(name, address);
 			conn.commit();
 		} catch (SQLException e) {
-			LOGGER.log(Level.WARNING, "Failed to create Branch");
+			LOGGER.log(Level.WARNING, "Failed to create Branch", e);
 			rollingBack();
-			throw new InsertException("Failed to create branch");
+			throw new InsertException("Failed to create branch", e);
 		}
 		return branch;
 	}
@@ -220,9 +220,9 @@ public class AdministratorServiceImpl {
 			branchDaoImpl.delete(branch);
 			conn.commit();
 		} catch (SQLException e) {
-			LOGGER.log(Level.WARNING, "Failed to delete Branch");
+			LOGGER.log(Level.WARNING, "Failed to delete Branch", e);
 			rollingBack();
-			throw new DeleteException("Failed to delete branch");
+			throw new DeleteException("Failed to delete branch", e);
 		}
 	}
 
@@ -231,9 +231,9 @@ public class AdministratorServiceImpl {
 			branchDaoImpl.update(branch);
 			conn.commit();
 		} catch (SQLException e) {
-			LOGGER.log(Level.WARNING, "Failed to delete Branch");
+			LOGGER.log(Level.WARNING, "Failed to delete Branch", e);
 			rollingBack();
-			throw new UpdateException("Failed to update branch");
+			throw new UpdateException("Failed to update branch", e);
 		}
 	}
 
@@ -243,9 +243,9 @@ public class AdministratorServiceImpl {
 			borrower = borrowerDaoImpl.create(name, address, phone);
 			conn.commit();
 		} catch (SQLException e) {
-			LOGGER.log(Level.WARNING, "Failed to create a Borrower");
+			LOGGER.log(Level.WARNING, "Failed to create a Borrower", e);
 			rollingBack();
-			throw new InsertException("Failed to create borrower");
+			throw new InsertException("Failed to create borrower", e);
 		}
 		return borrower;
 	}
@@ -255,9 +255,9 @@ public class AdministratorServiceImpl {
 			borrowerDaoImpl.update(borrower);
 			conn.commit();
 		} catch (SQLException e) {
-			LOGGER.log(Level.WARNING, "Failed to update a Borrower");
+			LOGGER.log(Level.WARNING, "Failed to update a Borrower", e);
 			rollingBack();
-			throw new UpdateException("Failed to update borrower");
+			throw new UpdateException("Failed to update borrower", e);
 		}
 	}
 
@@ -266,9 +266,9 @@ public class AdministratorServiceImpl {
 			borrowerDaoImpl.delete(borrower);
 			conn.commit();
 		} catch (SQLException e) {
-			LOGGER.log(Level.WARNING, "Failed to delete a Borrower");
+			LOGGER.log(Level.WARNING, "Failed to delete a Borrower", e);
 			rollingBack();
-			throw new DeleteException("Failed to delete a borrower");
+			throw new DeleteException("Failed to delete a borrower", e);
 		}
 	}
 
@@ -318,9 +318,9 @@ public class AdministratorServiceImpl {
 				success = true;
 				conn.commit();
 			} catch (SQLException e) {
-				LOGGER.log(Level.WARNING, "Failed to update due date on a loan");
+				LOGGER.log(Level.WARNING, "Failed to update due date on a loan", e);
 				rollingBack();
-				throw new UpdateException("Failed to update due date on loan");
+				throw new UpdateException("Failed to update due date on loan", e);
 			}
 		}
 		return success;

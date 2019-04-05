@@ -45,9 +45,9 @@ public class LibrarianServiceImpl implements LibrarianService {
 			branchDaoImpl.update(branch);
 			conn.commit();
 		} catch (SQLException e) {
-			LOGGER.log(Level.WARNING, "Failed to update a particular branch");
+			LOGGER.log(Level.WARNING, "Failed to update a particular branch", e);
 			rollingBack();
-			throw new UpdateException("Failed to update branch");
+			throw new UpdateException("Failed to update branch", e);
 		}
 	}
 	
@@ -57,7 +57,7 @@ public class LibrarianServiceImpl implements LibrarianService {
 			copiesDaoImpl.setCopies(branch, book, noOfCopies);
 			conn.commit();
 		} catch (SQLException e) {
-			LOGGER.log(Level.WARNING, "Failed to set copies for book_copies with BranchId = " + branch.getId() + " and BookId = " + book.getId());
+			LOGGER.log(Level.WARNING, "Failed to set copies for book_copies with BranchId = " + branch.getId() + " and BookId = " + book.getId(), e);
 			rollingBack();
 			throw new UnknownSQLException("Failed to set Branch Copies", e);
 		}
