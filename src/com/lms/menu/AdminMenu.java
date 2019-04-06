@@ -28,16 +28,19 @@ public class AdminMenu {
 	private final Scanner inStream;
 	private final Appendable outStream;
 	
+	private String env;
+	
 	private static final Logger LOGGER = Logger.getLogger(AdminMenu.class.getName());
 
-	public AdminMenu(Scanner inStream, Appendable outStream) {
+	public AdminMenu(Scanner inStream, Appendable outStream, String env) {
 		this.inStream = inStream;
 		this.outStream = outStream;
+		this.env = env;
 	}
 	
 	public boolean start() throws CriticalSQLException {
 		try {
-			adminService = new AdministratorServiceImpl("production");
+			adminService = new AdministratorServiceImpl(env);
 			boolean accessRun = true;
 			while(accessRun) {
 				println("What would you like to do?");

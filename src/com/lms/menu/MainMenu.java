@@ -20,13 +20,13 @@ public class MainMenu {
 	
 	private static final Logger LOGGER = Logger.getLogger(MainMenu.class.getName());
 
-	public MainMenu(Reader in, Appendable out) throws CriticalSQLException {
+	public MainMenu(Reader in, Appendable out, String env) throws CriticalSQLException {
 		this.inStream = new Scanner(in);
 		this.outStream = out;
 		
-		adminMenu = new AdminMenu(inStream, outStream);
-		borrowerMenu = new BorrowerMenu(inStream, outStream);
-		librarianMenu = new LibrarianMenu(inStream, outStream);
+		adminMenu = new AdminMenu(inStream, outStream, env);
+		borrowerMenu = new BorrowerMenu(inStream, outStream, env);
+		librarianMenu = new LibrarianMenu(inStream, outStream, env);
 	}
 
 	public void start() {
