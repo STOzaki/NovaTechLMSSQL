@@ -23,16 +23,19 @@ public class LibrarianMenu {
 	private final Scanner inStream;
 	private final Appendable outStream;
 	
+	private String env = "";
+	
 	private static final Logger LOGGER = Logger.getLogger(LibrarianMenu.class.getName());
 	
-	public LibrarianMenu(Scanner inStream, Appendable outStream) {
+	public LibrarianMenu(Scanner inStream, Appendable outStream, String env) {
 		this.inStream = inStream;
 		this.outStream = outStream;
+		this.env = env;
 	}
 	
 	public boolean start() throws CriticalSQLException {
 		try {
-			libraryService = new LibrarianServiceImpl("production");
+			libraryService = new LibrarianServiceImpl(env);
 			boolean libRun = true;
 			while(libRun) {
 				println("Type the number associated with the branch you manage.");

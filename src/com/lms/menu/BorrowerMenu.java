@@ -27,17 +27,20 @@ public class BorrowerMenu {
 	
 	private final Scanner inStream;
 	private final Appendable outStream;
+	
+	private String env = "";
 
 	private static final Logger LOGGER = Logger.getLogger(BorrowerMenu.class.getName());
 
-	public BorrowerMenu(Scanner inStream, Appendable outStream) {
+	public BorrowerMenu(Scanner inStream, Appendable outStream, String env) {
 		this.inStream = inStream;
 		this.outStream = outStream;
+		this.env = env;
 	}
 	
 	public boolean start() throws CriticalSQLException {
 		try {
-			borrowerService = new BorrowerServiceImpl("production");
+			borrowerService = new BorrowerServiceImpl(env);
 			boolean borrowerRun = true;
 			while(borrowerRun) {
 				println("Enter the your Card Number: (or 'quit' to exit.)");
