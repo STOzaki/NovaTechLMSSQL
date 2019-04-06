@@ -11,10 +11,12 @@ import com.lms.menu.MainMenu;
 public class App {
 
 	public static void main(String[] args) {
+		String env = "production";
+
 		final Logger LOGGER = Logger.getLogger(MainMenu.class.getName());
 		
 		try(InputStreamReader in = new InputStreamReader(System.in)) {
-			final MainMenu menu = new MainMenu(in, System.out);
+			final MainMenu menu = new MainMenu(in, System.out, env);
 			menu.start();
 		} catch (final IOException except) {
 			LOGGER.log(Level.SEVERE, "I/O error dealing with System input", except);
