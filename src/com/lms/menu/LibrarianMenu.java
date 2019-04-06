@@ -25,7 +25,7 @@ public class LibrarianMenu {
 	
 	private static final Logger LOGGER = Logger.getLogger(LibrarianMenu.class.getName());
 	
-	public LibrarianMenu(Scanner inStream, Appendable outStream) throws CriticalSQLException {
+	public LibrarianMenu(Scanner inStream, Appendable outStream) {
 		this.inStream = inStream;
 		this.outStream = outStream;
 	}
@@ -41,7 +41,7 @@ public class LibrarianMenu {
 					listOfAllBranches = libraryService.getAllBranches();
 				} catch (RetrieveException e1) {
 					LOGGER.log(Level.WARNING, "Could not load list of all branches", e1);
-					throw new CriticalSQLException("Could not load list of all branches", e1);
+					println("Sorry but we were not able to Retrieve any books");
 				}
 				printList(listOfAllBranches);
 				try {
@@ -62,6 +62,7 @@ public class LibrarianMenu {
 			}
 			return true;
 		} catch (CriticalSQLException e) {
+			LOGGER.log(Level.WARNING, "Unable to setup library service");
 			throw new CriticalSQLException("Internal service error with the library service", e);
 		} finally {
 			try {
@@ -112,7 +113,7 @@ public class LibrarianMenu {
 				listOfAllBooks = libraryService.getAllBooks();
 			} catch (RetrieveException e1) {
 				LOGGER.log(Level.WARNING, "Could not get a list of all books", e1);
-				throw new CriticalSQLException("Could not get a list of all books", e1);
+				println("I am sorry, but we were unable to get a list of all books");
 			}
 			printList(listOfAllBooks);
 			try {
@@ -140,7 +141,7 @@ public class LibrarianMenu {
 			listOfAllCopies = libraryService.getAllCopies();
 		} catch (RetrieveException e1) {
 			LOGGER.log(Level.WARNING, "Failed to get a list of book copies", e1);
-			throw new CriticalSQLException("Failed to get a list of book copies", e1);
+			println("Unfortunaly, we were unable to get a list of all book copies");
 		}
 		int existingNumOfCopies = 0;
 		if(listOfAllCopies.containsKey(branch)) {
@@ -162,7 +163,6 @@ public class LibrarianMenu {
 			LOGGER.log(Level.WARNING, "Failed to set branch copies: " + e.getMessage());
 			println("I am sorry but there seems to have been a problem with updating the number of copies in " +
 					branch.getName() + " for " + book.getTitle());
-			throw new CriticalSQLException("Failed to set new branch copy amount", e);
 		}
 		return true;
 	}
@@ -193,7 +193,10 @@ public class LibrarianMenu {
 		} catch (UpdateException e) {
 			LOGGER.log(Level.WARNING, "Failed update branch: " + e);
 			println("Unfortunaly, we were unable to update the branch details for " + branch.getName());
-			throw new CriticalSQLException("Failed to update branch", e);
+
+		} catch (CriticalSQLException e) {
+			LOGGER.log(Level.WARNING, "Failed update branch: " + e);
+			throw new CriticalSQLException("Failed update branch", e);
 		}
 		println("Successfully Updated");
 		return true;

@@ -30,7 +30,7 @@ public class AdminMenu {
 	
 	private static final Logger LOGGER = Logger.getLogger(AdminMenu.class.getName());
 
-	public AdminMenu(Scanner inStream, Appendable outStream) throws CriticalSQLException {
+	public AdminMenu(Scanner inStream, Appendable outStream) {
 		this.inStream = inStream;
 		this.outStream = outStream;
 	}
@@ -91,7 +91,7 @@ public class AdminMenu {
 			listOfLoans = adminService.getAllLoans();
 		} catch (RetrieveException e1) {
 			LOGGER.log(Level.WARNING, "Failed to get all loans", e1);
-			throw new CriticalSQLException("Failed to get all loans", e1);
+			println("We were unable to get a list of all loans");
 		}
 		
 		println("Which loan would you like to override the due date");
@@ -118,10 +118,9 @@ public class AdminMenu {
 		} catch (UpdateException e) {
 			LOGGER.log(Level.WARNING, "Failed to override due date");
 			println("We were unable to override due date");
-			throw new CriticalSQLException("Failed to override due date", e);
 		} catch (RetrieveException e) {
 			LOGGER.log(Level.WARNING, "Failed to override due date", e);
-			throw new CriticalSQLException("Failed to override due date", e);
+			println("We were unable to get that book loan you are talking about");
 		}
 		return true;
 	}
@@ -170,7 +169,7 @@ public class AdminMenu {
 			bookList = adminService.getAllBooks();
 		} catch (RetrieveException e1) {
 			LOGGER.log(Level.WARNING, "Failed to get all books", e1);
-			throw new CriticalSQLException("Failed to get all books", e1);
+			println("We were unable to get a list of all books");
 		}
 		println("Which book would you like to delete?");
 		printList(bookList);
@@ -183,7 +182,6 @@ public class AdminMenu {
 		} catch (DeleteException e) {
 			LOGGER.log(Level.WARNING, "Failed to delete book");
 			println("We could not delete your requested book");
-			throw new CriticalSQLException("Failed to delete book", e);
 		}
 		return true;
 	}
@@ -194,7 +192,7 @@ public class AdminMenu {
 			authorList = adminService.getAllAuthors();
 		} catch (RetrieveException e1) {
 			LOGGER.log(Level.WARNING, "Failed to get all authors", e1);
-			throw new CriticalSQLException("Failed to get all authors", e1);
+			println("We were unable to get a list of all authors");
 		}
 		println("Which author would you like to delete?");
 		printList(authorList);
@@ -207,7 +205,6 @@ public class AdminMenu {
 		} catch (DeleteException e) {
 			LOGGER.log(Level.WARNING, "Failed to delete author");
 			println("We could not delete your requested author");
-			throw new CriticalSQLException("Failed to delete author", e);
 		}
 		return true;
 	}
@@ -218,7 +215,7 @@ public class AdminMenu {
 			publisherList = adminService.getAllPublishers();
 		} catch (RetrieveException e1) {
 			LOGGER.log(Level.WARNING, "Failed to get all publishers", e1);
-			throw new CriticalSQLException("Failed to get all publishers", e1);
+			println("We were unable to get a list of all publishers");
 		}
 		println("Which publisher would you like to delete?");
 		printList(publisherList);
@@ -231,7 +228,6 @@ public class AdminMenu {
 		} catch (DeleteException e) {
 			LOGGER.log(Level.WARNING, "Failed to delete publisher");
 			println("We could not delete your requested publisher");
-			throw new CriticalSQLException("Failed to delete publisher", e);
 		}
 		return true;
 	}
@@ -242,7 +238,7 @@ public class AdminMenu {
 			branchList = adminService.getAllBranches();
 		} catch (RetrieveException e1) {
 			LOGGER.log(Level.WARNING, "Failed to get all branches", e1);
-			throw new CriticalSQLException("Failed to get all branches", e1);
+			println("We were unable to get a list of all branches");
 		}
 		println("Which branch would you like to delete?");
 		printList(branchList);
@@ -255,7 +251,6 @@ public class AdminMenu {
 		} catch (DeleteException e) {
 			LOGGER.log(Level.WARNING, "Failed to delete branch");
 			println("We could not delete your requested library branch");
-			throw new CriticalSQLException("Failed to delete branch", e);
 		}
 		return true;
 	}
@@ -266,7 +261,7 @@ public class AdminMenu {
 			borrowerList = adminService.getAllBorrowers();
 		} catch (RetrieveException e1) {
 			LOGGER.log(Level.WARNING, "Failed to get all borrowers", e1);
-			throw new CriticalSQLException("Failed to get all borrowers", e1);
+			println("We were unable to get a list of all borrowers");
 		}
 		println("Which borrower would you like to delete?");
 		printList(borrowerList);
@@ -279,7 +274,6 @@ public class AdminMenu {
 		} catch (DeleteException e) {
 			LOGGER.log(Level.WARNING, "Failed to delete borrower");
 			println("We could not delete your requested borrower");
-			throw new CriticalSQLException("Failed to delete borrower", e);
 		}
 		return true;
 	}
@@ -332,7 +326,7 @@ public class AdminMenu {
 			publisherList = adminService.getAllPublishers();
 		} catch (RetrieveException e1) {
 			LOGGER.log(Level.WARNING, "Failed to get a list of authors, books, and or publishers", e1);
-			throw new CriticalSQLException("Failed to a list of authors, books, and or publishers", e1);
+			println("We were unable to get a list of all authors, books, or publishers");
 		}
 		
 		println("Which book would you like to update?");
@@ -368,7 +362,6 @@ public class AdminMenu {
 		} catch (UpdateException e) {
 			LOGGER.log(Level.WARNING, "Failed to update book");
 			println("We could not update your requested book");
-			throw new CriticalSQLException("Failed to update a book", e);
 		}
 		return true;
 	}
@@ -379,7 +372,7 @@ public class AdminMenu {
 			authorList = adminService.getAllAuthors();
 		} catch (RetrieveException e1) {
 			LOGGER.log(Level.WARNING, "Failed to get all authors", e1);
-			throw new CriticalSQLException("Failed to get all authors", e1);
+			println("We were unable to get a list of all authors");
 		}
 
 		println("Which author would you like to update?");
@@ -398,7 +391,6 @@ public class AdminMenu {
 		} catch (UpdateException e) {
 			LOGGER.log(Level.WARNING, "Failed to update author");
 			println("We could not update your requested author");
-			throw new CriticalSQLException("Failed to update an author", e);
 		}
 		return true;
 	}
@@ -409,7 +401,7 @@ public class AdminMenu {
 			publisherList = adminService.getAllPublishers();
 		} catch (RetrieveException e1) {
 			LOGGER.log(Level.WARNING, "Failed to get all publishers", e1);
-			throw new CriticalSQLException("Failed to get all publishers", e1);
+			println("We were unable to get a list of all publishers");
 		}
 
 		println("Which publisher would you like to update?");
@@ -436,7 +428,6 @@ public class AdminMenu {
 		} catch (UpdateException e) {
 			LOGGER.log(Level.WARNING, "Failed to update publisher");
 			println("We could not update your requested publisher");
-			throw new CriticalSQLException("Failed to update publisher", e);
 		}
 		
 		return true;
@@ -448,7 +439,7 @@ public class AdminMenu {
 			branchList = adminService.getAllBranches();
 		} catch (RetrieveException e1) {
 			LOGGER.log(Level.WARNING, "Failed to get all branches", e1);
-			throw new CriticalSQLException("Failed to get all branches", e1);
+			println("We were unable to get a list of all branches");
 		}
 
 		println("Which branch would you like to update?");
@@ -471,7 +462,6 @@ public class AdminMenu {
 		} catch (UpdateException e) {
 			LOGGER.log(Level.WARNING, "Failed to update branch");
 			println("We could not update your requested library branch");
-			throw new CriticalSQLException("Failed to update branch", e);
 		}
 		return true;
 	}
@@ -482,7 +472,7 @@ public class AdminMenu {
 			borrowerList = adminService.getAllBorrowers();
 		} catch (RetrieveException e1) {
 			LOGGER.log(Level.WARNING, "Failed to get all borrowers", e1);
-			throw new CriticalSQLException("Failed to get all borrowers", e1);
+			println("We were unable to get a list of all borrowers");
 		}
 
 		println("Which borrower would you like to update?");
@@ -509,7 +499,6 @@ public class AdminMenu {
 		} catch (UpdateException e) {
 			LOGGER.log(Level.WARNING, "Failed to update borrower");
 			println("We could not update your requested borrower");
-			throw new CriticalSQLException("Failed to update borrower", e);
 		}
 		
 		return true;
@@ -563,7 +552,7 @@ public class AdminMenu {
 			publisherList = adminService.getAllPublishers();
 		} catch (RetrieveException e1) {
 			LOGGER.log(Level.WARNING, "Failed to get all authors or publishers", e1);
-			throw new CriticalSQLException("Failed to get all authors or publishers", e1);
+			println("We were unable to get a list of all authors or publishers");
 		}
 		
 		println("Which author wrote this book?");
@@ -588,7 +577,6 @@ public class AdminMenu {
 		} catch (InsertException e) {
 			LOGGER.log(Level.WARNING, "Failed to create book");
 			println("We could not create your requested book");
-			throw new CriticalSQLException("Failed to create book", e);
 		}
 
 		if(returntedBook != null) {
@@ -608,7 +596,6 @@ public class AdminMenu {
 		} catch (InsertException e) {
 			LOGGER.log(Level.WARNING, "Failed to create author");
 			println("We could not create your requested author");
-			throw new CriticalSQLException("Failed to create author", e);
 		}
 
 		if(newAuthor != null) {
@@ -632,7 +619,6 @@ public class AdminMenu {
 		} catch (InsertException e) {
 			LOGGER.log(Level.WARNING, "Failed to create publisher");
 			println("We could not create your requested publisher");
-			throw new CriticalSQLException("Failed to create publisher", e);
 		}
 
 		if(newPublisher != null) {
@@ -654,7 +640,6 @@ public class AdminMenu {
 		} catch (InsertException e) {
 			LOGGER.log(Level.WARNING, "Failed to create branch");
 			println("We could not create your requested library branch");
-			throw new CriticalSQLException("Failed to create branch", e);
 		}
 
 		if(newBranch != null) {
@@ -678,7 +663,6 @@ public class AdminMenu {
 		} catch (InsertException e) {
 			LOGGER.log(Level.WARNING, "Failed to create borrower");
 			println("We could not create your requested borrower");
-			throw new CriticalSQLException("Failed to create borrower", e);
 		}
 
 		if(newBorrower != null) {
