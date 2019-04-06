@@ -30,7 +30,7 @@ public class BorrowerMenu {
 
 	private static final Logger LOGGER = Logger.getLogger(BorrowerMenu.class.getName());
 
-	public BorrowerMenu(Scanner inStream, Appendable outStream) throws CriticalSQLException {
+	public BorrowerMenu(Scanner inStream, Appendable outStream) {
 		this.inStream = inStream;
 		this.outStream = outStream;
 	}
@@ -58,7 +58,7 @@ public class BorrowerMenu {
 					println("That is not a number");
 				} catch (RetrieveException e) {
 					LOGGER.log(Level.WARNING, "Failed to get a borrower from ther borrower service", e);
-					throw new CriticalSQLException("Failed to get a borrower from ther borrower service", e);
+					println("We were unable to find that borrower");
 				}
 			}
 			return true;
@@ -111,7 +111,7 @@ public class BorrowerMenu {
 			listOfAllBranches = borrowerService.getAllBranches();
 		} catch (RetrieveException e1) {
 			LOGGER.log(Level.WARNING, "Failed to get all branches", e1);
-			throw new CriticalSQLException("Failed to get all branches", e1);
+			println("We were unable to get a list of branches");
 		}
 		printList(listOfAllBranches);
 		boolean runReturningABook = true;
@@ -142,7 +142,7 @@ public class BorrowerMenu {
 			BooksLoanedToBorrower = borrowerService.getAllBorrowedBooks(borrower);
 		} catch (RetrieveException e1) {
 			LOGGER.log(Level.WARNING, "Failed to get all borrowed books", e1);
-			throw new CriticalSQLException("Failed to get all borrowed books", e1);
+			println("We were unable to get a list of all borrowed books");
 		}
 		List<Loan> BooksLoanedToBorrowerFromBranch = BooksLoanedToBorrower.parallelStream()
 				.filter(l -> l.getBranch().equals(branch)).collect(Collectors.toList());
@@ -176,10 +176,10 @@ public class BorrowerMenu {
 			} catch (DeleteException e) {
 				LOGGER.log(Level.WARNING, "Failed to return a book");
 				println("Unfortunatly, we were unable to return your book at this time.");
-				throw new CriticalSQLException("Failed to return a book", e);
 			} catch (RetrieveException e) {
 				LOGGER.log(Level.WARNING, "Failed to return a book", e);
-				throw new CriticalSQLException("Failed to return a book", e);
+				println("We were not able to find the book you are returning in our database.");
+				println("Are you sure you are in the right branch?");
 			}
 		}
 		return true;
@@ -193,7 +193,7 @@ public class BorrowerMenu {
 			listOfAllBranches = borrowerService.getAllBranches();
 		} catch (RetrieveException e1) {
 			LOGGER.log(Level.WARNING, "Failed to get all branches", e1);
-			throw new CriticalSQLException("Failed to get all branches", e1);
+			println("I am sorry but we were unable to get a list of all branches");
 		}
 		printList(listOfAllBranches);
 		boolean runCheckingBranch = true;
@@ -224,7 +224,7 @@ public class BorrowerMenu {
 			mapOfAllBooksInBranch = borrowerService.getAllBranchCopies(branch);
 		} catch (RetrieveException e1) {
 			LOGGER.log(Level.WARNING, "Failed to get all branch copies", e1);
-			throw new CriticalSQLException("Failed to get all branch copies", e1);
+			println("I am sorry but we were unable to get a list of all book copies");
 		}
 		List<Book>listOfAllBooksInBranch = new ArrayList<>(mapOfAllBooksInBranch.keySet());
 		printList(listOfAllBooksInBranch);
@@ -256,7 +256,7 @@ public class BorrowerMenu {
 			listOfAllLoansFromBorrower = borrowerService.getAllBorrowedBooks(borrower);
 		} catch (RetrieveException e1) {
 			LOGGER.log(Level.WARNING, "Failed to get all borrowed books", e1);
-			throw new CriticalSQLException("Failed to get borrowed books", e1);
+			println("We were unable to get a list of all borrower's books");
 		}
 		List<Loan> matchingListOfLoans = listOfAllLoansFromBorrower.parallelStream().filter(l -> l.getBook().equals(book) &&
 				l.getBorrower().equals(borrower) && l.getBranch().equals(branch)).collect(Collectors.toList());
@@ -270,7 +270,6 @@ public class BorrowerMenu {
 			} catch (InsertException e) {
 				LOGGER.log(Level.WARNING, "Failed to borrower a book");
 				println("We were unable to borrower the requested book");
-				throw new CriticalSQLException("Failed to borrow a book", e);
 			}
 		}
 		return true;
