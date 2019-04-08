@@ -53,10 +53,13 @@ public class BookLoansDaoImpl {
 			// close first one
 			prepareStatement.close();
 			
-			sql = "SELECT * FROM " + table + " ORDER BY bookId DESC LIMIT 1;";
+			sql = "SELECT * FROM " + table + " WHERE bookId = ? AND branchId = ? AND cardNo = ?;";
 			prepareStatement = conn.prepareStatement(sql);
+			prepareStatement.setInt(1, book.getId());
+			prepareStatement.setInt(2, branch.getId());
+			prepareStatement.setInt(3, borrower.getCardNo());
 			resultSet = prepareStatement.executeQuery();
-	
+
 			resultSet.next();
 			LocalDateTime newDateOut = null;
 			if(resultSet.getDate("dateOut") != null) {
