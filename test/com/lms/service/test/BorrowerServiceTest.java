@@ -1,6 +1,7 @@
 package com.lms.service.test;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -71,32 +72,41 @@ public class BorrowerServiceTest {
 		testBorrower = adminService.createBorrower(borrowerName, borrowerAddress, borrowerPhone);
 		testBook = adminService.createBook(title, null, null);
 		testBranch = adminService.createBranch(branchName, branchAddress);
-		// due date is two weeks from now
-		testLoan = borrowerService.borrowBook(testBorrower, testBook, testBranch, LocalDateTime.now(), LocalDate.now().plusWeeks(2));
 		libService.setBranchCopies(testBranch, testBook, noOfCopies);
+		// due date is two weeks from now
+		testLoan = borrowerService.borrowBook(testBorrower, testBook, testBranch, LocalDateTime.now(),
+				LocalDate.now().plusWeeks(2));
 	}
 	
 	@AfterEach
 	public void tearThis() throws SQLException, DeleteException, UnknownSQLException, RetrieveException, CriticalSQLException {
 		// WARNING maybe something that doesn't call the method we are trying to test
+		borrowerService.returnBook(testBorrower, testBook, testBranch, LocalDate.now());
+		libService.setBranchCopies(testBranch, testBook, 0);
 		adminService.deleteBorrower(testBorrower);
 		adminService.deleteBook(testBook);
 		adminService.deleteBranch(testBranch);
-		borrowerService.returnBook(testBorrower, testBook, testBranch, LocalDate.now());
-		libService.setBranchCopies(testBranch, testBook, 0);
 	}
 
-	@DisplayName("Can return a book because not over the due date")
+	@DisplayName("Can return a book because not over the due date and no. of copies goes back up")
 	@Test
-	public void returnBookTest() throws DeleteException, RetrieveException, CriticalSQLException {
+	public void returnBookTest() throws DeleteException, RetrieveException, CriticalSQLException, InsertException {
+		int noOfCopiesBeforeReturingABook = borrowerService.getAllBranchCopies(testBranch).get(testBook);
 		// returning 1 week before it is due
 		boolean result = borrowerService.returnBook(testBorrower, testBook, testBranch, LocalDate.now().plusWeeks(1));
 		assertTrue(result);
+		int noOfCopiesAfterReturingABook = borrowerService.getAllBranchCopies(testBranch).get(testBook);
+		
+		int newNoOfCopies = borrowerService.getAllBranchCopies(testBranch).get(testBook);
+		assertEquals(noOfCopies, newNoOfCopies);
+		assertEquals(noOfCopiesBeforeReturingABook + 1, noOfCopiesAfterReturingABook);
+		
+		borrowerService.borrowBook(testBorrower, testBook, testBranch, LocalDateTime.now(), LocalDate.now().plusWeeks(2));
 	}
 	
 	@DisplayName("Cannot return book if it cannot find that loan")
 	@Test
-	public void returnNullBookTest() throws DeleteException, RetrieveException, CriticalSQLException {
+	public void returnNullBookTest() throws DeleteException, RetrieveException, CriticalSQLException, InsertException {
 		Book fakeBook = new Book(Integer.MAX_VALUE, "Some Title", null, null);
 		boolean result = borrowerService.returnBook(testBorrower, fakeBook, testBranch, LocalDate.now().plusWeeks(1));
 		assertFalse(result);
@@ -104,10 +114,34 @@ public class BorrowerServiceTest {
 	
 	@DisplayName("Cannot return book if due date has already passed")
 	@Test
-	public void returnBookWithDueDatePassedTest() throws DeleteException, RetrieveException, CriticalSQLException {
+	public void returnBookWithDueDatePassedTest() throws DeleteException, RetrieveException, CriticalSQLException, InsertException {
 		// 1 week after book is due
 		boolean result = borrowerService.returnBook(testBorrower, testBook, testBranch, LocalDate.now().plusWeeks(3));
 		assertFalse(result);
+	}
+	
+	@DisplayName("borrow returns null if there are no copies of that book")
+	@Test
+	public void borrowBookNullTest() throws InsertException, CriticalSQLException, DeleteException {
+		Book newBook = adminService.createBook(title, null, null);
+		Loan newLoan = borrowerService.borrowBook(testBorrower, newBook, testBranch, LocalDateTime.now(), LocalDate.now().plusWeeks(2));
+		
+		assertNull(newLoan);
+		
+		adminService.deleteBook(newBook);
+	}
+	
+	@DisplayName("borrow a book and no. of copies goes down")
+	@Test
+	public void borrowBookAndNoOfCopiesDown() throws DeleteException, RetrieveException, CriticalSQLException, InsertException {
+		// returning 1 week before it is due
+		borrowerService.returnBook(testBorrower, testBook, testBranch, LocalDate.now().plusWeeks(1));
+		int noOfCopiesBeforeBorrowing = borrowerService.getAllBranchCopies(testBranch).get(testBook);
+		
+		borrowerService.borrowBook(testBorrower, testBook, testBranch, LocalDateTime.now(), LocalDate.now().plusWeeks(2));
+		int noOfCopiesAfterBorrowing = borrowerService.getAllBranchCopies(testBranch).get(testBook);
+		
+		assertEquals(noOfCopiesBeforeBorrowing - 1, noOfCopiesAfterBorrowing);
 	}
 	
 	@Test
