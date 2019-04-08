@@ -52,8 +52,12 @@ public class BorrowerServiceImpl {
 	public Loan borrowBook(Borrower borrower, Book book, Branch branch, LocalDateTime dateOut, LocalDate dueDate) throws InsertException, CriticalSQLException {
 		Loan newLoan = null;
 		try {
-			newLoan = loanDaoImpl.create(book, borrower, branch, dateOut, dueDate);
-			conn.commit();
+			if(copiesDaoImpl.getAllBranchCopies(branch).containsKey(book)) {
+				newLoan = loanDaoImpl.create(book, borrower, branch, dateOut, dueDate);
+				int tempNoOfCopies = copiesDaoImpl.getAllBranchCopies(branch).get(book);
+				copiesDaoImpl.setCopies(branch, book, tempNoOfCopies - 1);
+				conn.commit();
+			}
 		} catch (SQLException e) {
 			LOGGER.log(Level.WARNING, "Failed to create a loan with Borrower CardNo = " + borrower.getCardNo() + " and book Id = " +
 						book.getId() + " and branch Id = " + branch.getId(), e);
@@ -89,6 +93,12 @@ public class BorrowerServiceImpl {
 			if(foundLoan.getDueDate().isAfter(dueDate)) {
 				try {
 					loanDaoImpl.delete(foundLoan);
+					if(copiesDaoImpl.getAllBranchCopies(branch).containsKey(book)) {
+						int tempNoOfCopies = copiesDaoImpl.getAllBranchCopies(branch).get(book);
+						copiesDaoImpl.setCopies(branch, book, tempNoOfCopies + 1);
+					} else {
+						copiesDaoImpl.setCopies(branch, book, 1);
+					}
 					returnedBook = true;
 					conn.commit();
 				} catch (SQLException e) {

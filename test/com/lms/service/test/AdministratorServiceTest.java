@@ -22,6 +22,7 @@ import com.lms.customExceptions.CriticalSQLException;
 import com.lms.customExceptions.DeleteException;
 import com.lms.customExceptions.InsertException;
 import com.lms.customExceptions.RetrieveException;
+import com.lms.customExceptions.UnknownSQLException;
 import com.lms.customExceptions.UpdateException;
 import com.lms.model.Book;
 import com.lms.model.Borrower;
@@ -29,6 +30,7 @@ import com.lms.model.Branch;
 import com.lms.model.Loan;
 import com.lms.service.AdministratorServiceImpl;
 import com.lms.service.BorrowerServiceImpl;
+import com.lms.service.LibrarianServiceImpl;
 
 public class AdministratorServiceTest {
 
@@ -44,6 +46,8 @@ public class AdministratorServiceTest {
 	// due date is two weeks from now
 	private static final LocalDate officialDueDate = LocalDate.now().plusWeeks(2);
 	
+	private int noOfCopies = 50;
+	
 	private Borrower testBorrower;
 	private Book testBook;
 	private Loan testLoan;
@@ -51,33 +55,38 @@ public class AdministratorServiceTest {
 	
 	private static AdministratorServiceImpl adminService;
 	private static BorrowerServiceImpl borrowerService;
+	private static LibrarianServiceImpl libraryService;
 
 	@BeforeAll
 	public static void initAll() throws IOException, SQLException, CriticalSQLException {
 		adminService = new AdministratorServiceImpl("test");
 		borrowerService = new BorrowerServiceImpl("test");
+		libraryService = new LibrarianServiceImpl("test");
 	}
 	
 	@AfterAll
 	public static void cleanUp() throws IOException, SQLException, CriticalSQLException {
 		adminService.closeConnection();
 		borrowerService.closeConnection();
+		libraryService.closeConnection();
 	}
 	
 	@BeforeEach
-	public void init() throws SQLException, CriticalSQLException, InsertException {
+	public void init() throws SQLException, CriticalSQLException, InsertException, UnknownSQLException {
 		testBorrower = adminService.createBorrower(borrowerName, borrowerAddress, borrowerPhone);
 		testBook = adminService.createBook(title, null, null);
 		testBranch = adminService.createBranch(branchName, branchAddress);
+		libraryService.setBranchCopies(testBranch, testBook, noOfCopies);
 		testLoan = borrowerService.borrowBook(testBorrower, testBook, testBranch, LocalDateTime.now(), officialDueDate);
 	}
 	
 	@AfterEach
-	public void tearThis() throws SQLException, DeleteException, RetrieveException, CriticalSQLException {
+	public void tearThis() throws SQLException, DeleteException, RetrieveException, CriticalSQLException, UnknownSQLException {
+		borrowerService.returnBook(testBorrower, testBook, testBranch, LocalDate.now());
+		libraryService.setBranchCopies(testBranch, testBook, 0);
 		adminService.deleteBorrower(testBorrower);
 		adminService.deleteBook(testBook);
 		adminService.deleteBranch(testBranch);
-		borrowerService.returnBook(testBorrower, testBook, testBranch, LocalDate.now());
 	}
 	
 	@DisplayName("Override due date correctly")
